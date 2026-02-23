@@ -1,0 +1,28 @@
+[gd_scene load_steps=7 format=3 uid="uid://cpmi1mijkmcjc"]
+
+[ext_resource type="Script" uid="uid://dnsq6omdk15v5" path="res://scripts/animals/animal_manager.gd" id="1_pjtaj"]
+[ext_resource type="Script" uid="uid://csnw2iu2hl2yn" path="res://scripts/animals/animal_context.gd" id="2_isr3r"]
+[ext_resource type="Script" uid="uid://ba262wevrk1t7" path="res://scripts/animals/enemy_spawner.gd" id="2_v6dhp"]
+[ext_resource type="Script" uid="uid://b686vd6nietw1" path="res://scripts/utility/map.gd" id="4_ra3gx"]
+[ext_resource type="Script" uid="uid://cqp17177q4ubj" path="res://scripts/enemy_factory.gd" id="4_vvsfx"]
+
+[sub_resource type="Resource" id="Resource_d4qg1"]
+script = ExtResource("4_ra3gx")
+metadata/_custom_type_script = "uid://b686vd6nietw1"
+
+[node name="animal_manager" type="Node" node_paths=PackedStringArray("enemy_spawner", "context")]
+script = ExtResource("1_pjtaj")
+enemy_spawner = NodePath("enemy_spawner")
+context = NodePath("animal_context")
+
+[node name="animal_context" type="Node" parent="."]
+script = ExtResource("2_isr3r")
+
+[node name="enemy_spawner" type="Node" parent="." node_paths=PackedStringArray("context", "factory")]
+script = ExtResource("2_v6dhp")
+context = NodePath("../animal_context")
+factory = NodePath("enemy_factory")
+_active_radishes = SubResource("Resource_d4qg1")
+
+[node name="enemy_factory" type="Node" parent="enemy_spawner"]
+script = ExtResource("4_vvsfx")

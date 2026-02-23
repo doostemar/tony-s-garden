@@ -1,0 +1,66 @@
+various to-do's:
+
+
+debug ui
+-----------------------
+	toggling debug overlay
+	debug menu
+		it's a bunch of buttons that you can use to enable parts of the debug ui
+			e.g. one button toggles hovering the mouse over a tile shows the tile's stats
+	console
+		copying the console to clipboard? might be useful
+		
+
+finishing the prototype
+-----------------------
+	connect moles somehow with radishes such that radishes will play an animation
+	when a mole is trying to take them
+			taking needs to emit a signal so that radishes play a blinking animation
+			and if that animation goes on long enough, the radishes need to disappear,
+			denying the player a harvest
+	
+	moles need to be set up with a state of "taking" the plant, which
+	is probably managed by a parameter so that in harder difficulties, plants
+	get taken faster
+	
+	moles need to be defeated if they are within the shout aoe, they need a
+	special animation for leaving, maybe just the reverse of their emergence 
+
+	add the rest of the garden assets and the ui
+	
+	game manager that keeps track of time of left, how many radishes collected
+	etc. it changes the level, and the difficulty over time
+
+
+change in how spawning works
+-----------------------
+	there's currently a flaw in the way spawning works. when tony shouts off a mole,
+	the radish that mole was trying to get will be safe forever. this is also true,
+	of course, for a radish that never triggers a mole. it will never trigger one
+	even if it's never picked up by tony.
+	
+	to correct this, spawning should be based on an event, not on a signal for when
+	radishes reach a certain state.
+	
+	when each radish is made, they should be put in a data structure. then animal
+	manager has a global timer that's managed by a spawn_rate parameter. that
+	parameter will determine when a spawn request is triggered. we could add some
+	variation to this rate as well, by generating a variance value to add or subtract
+	to the timer. this might not be necessary though, so we can leave it out at first maybe
+	nah let's just do it
+	
+	when the trigger happens, we will first, just for the sake of more precise
+	control over spawning, and to give it more of a natural feel, see if we pass
+	the spawn chance threshold. if we do, we can continue with the request
+	
+	the spawn request will then find a radish target from the data structure
+	then it will determine what state it's in
+	if it's in a mature state, it's a mole target, so we will call the check 
+	adjacent tiles function to find a spawn point for the mole, and yada yada,
+	the mole spawns same as always
+	
+	if tony shouts the mole away, but leaves the radish, it remains in the data
+	structure, so it's always still at risk of getting chosen.
+	
+	only when a radish is picked will it be removed from the data structure. until then, it is always
+	at risk of being stolen

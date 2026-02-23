@@ -1,0 +1,20 @@
+notes on plants
+
+they obviously have states, so a state machine would be good here
+
+SEED_STATE
+SPROUT_STATE
+PLANT_STATE
+
+plants also have a GROWTH_VALUE, which helps determine change in state
+growth starts at 0 and gradually goes up when the plant is planted, this is the GROWTH_RATE
+
+RAIN affects GROWTH RATE, so plants need to keep track of WEATHER
+
+the states themselves don't seem to have many properties, but mark the plant for animal interactions
+	no animals eat seeds right now
+	deer or rabbits will eat sprouts
+	moles take finished plants
+
+but what about pulled plants? perhaps this is the RADISH_STATE?
+we give the plant collision for being picked up and thrown

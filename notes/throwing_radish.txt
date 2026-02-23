@@ -1,0 +1,21 @@
+let's think of a way to implement throwing a radish
+
+implementation
+	let's say tony has a reference to the radish in his hand
+	so when he uses the throw command, he can send that radish data
+	such as what direction tony is facing, and what his current throwing power is
+	this will determine where the radish goes and how far it goes
+	let's say it's velocity is always constant for now, the radish will move
+	a certain amount of units per frame, in the direction tony was facing when
+	he threw it, and it will go a distance determined by tony's throwing power
+
+features
+	i think though that radishes should do more when thrown than simply collide
+	with the box or an enemy and then land, i think they should bounce, and they
+	should always bounce to the nearest target
+	for example, if tony throws a radish at an animal, if the nearest target is
+	the harvest box, it will go to the harvest box, however if the nearest target
+	is another animal, it will bounce to that animal and then bounce again, but
+	it will only go as far as tony's throwing distance 
+		(or maybe the bounce always grants a certain extra amount of distance, 
+		which can be buffed, just like tony's power)

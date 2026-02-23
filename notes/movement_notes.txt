@@ -1,0 +1,20 @@
+currently the implementation is bugged. if you spam inputs, the code that
+clears the stack is never reached (because it's clearing the stack per input)
+
+a stupid solution would be try to clear the stack every frame on top of what we have
+
+but can we not just use godot's input system for this?
+can we not know that an input was released and then remove it from the stack?
+what if we always checked if a key was pressed?*
+
+ok, here's the solution:
+	tony's process function calls input manager's process input function
+	the process input function checks if any of the movement keys are just pressed
+		as it does with every other input
+	if they are, it adds them to a stack of directions
+		if that direction already exists, it removes it first
+	the movement component is also called by the process function in tony
+	the movement component checks the last direction in the input stack of input manager
+	it also checks if that direction is currently pressed
+	if it is, it moves in that direction
+	if it's not, that direction is removed, and we check the next one

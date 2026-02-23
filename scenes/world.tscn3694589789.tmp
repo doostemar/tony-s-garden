@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://mtxx7hwyh0to"]
+
+[ext_resource type="PackedScene" uid="uid://bxp0yx12714r0" path="res://scenes/grid_manager.tscn" id="1_35tjc"]
+[ext_resource type="PackedScene" uid="uid://bc815ejajxw2d" path="res://scenes/tony.tscn" id="2_63wj8"]
+[ext_resource type="PackedScene" uid="uid://bigi8me8uap1h" path="res://scenes/box.tscn" id="3_4wyf3"]
+
+[node name="world" type="Node2D"]
+z_as_relative = false
+y_sort_enabled = true
+
+[node name="grid_manager" parent="." instance=ExtResource("1_35tjc")]
+z_as_relative = false
+side_length = 11
+offset = Vector2(75, 100)
+
+[node name="tony" parent="." instance=ExtResource("2_63wj8")]
+position = Vector2(134, 112)
+
+[node name="box" parent="." node_paths=PackedStringArray("grid_manager") instance=ExtResource("3_4wyf3")]
+position = Vector2(24, 23)
+grid_manager = NodePath("../grid_manager")

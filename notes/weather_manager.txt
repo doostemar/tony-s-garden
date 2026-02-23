@@ -1,0 +1,21 @@
+weather manager manages the weather
+
+the weather states are SUNNY, CHANCE OF RAIN, and RAINING
+
+the first two states only affect the UI. the player needs to know when it's
+about to rain.
+
+the states are changed by chance. the timer value for the next weather change is
+randomized in a certain range. this keeps things fresh and relatively balanced.
+
+the RAINING state is the only state that interacts with other game components
+
+when it's raining, a signal will be emitted that increases the growth rate of
+each dirt tile.
+
+when the rain stops, the growth rate will revert back to its original value in
+some way. perhaps it goes back gradually, which makes sense as the plants will
+be "watered"d
+
+the weather manager also needs to recieve a signal from tony's dance input. when
+tony dances, the timer for the next rain needs to shorten dramatically.

@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://mtxx7hwyh0to"]
+
+[ext_resource type="PackedScene" uid="uid://bc815ejajxw2d" path="res://scenes/tony.tscn" id="1_4wyf3"]
+[ext_resource type="PackedScene" uid="uid://bigi8me8uap1h" path="res://scenes/box.tscn" id="2_k0juu"]
+[ext_resource type="PackedScene" uid="uid://b1aef0h0nie24" path="res://scenes/animal_manager.tscn" id="3_71j4m"]
+[ext_resource type="PackedScene" uid="uid://bcit5alt76l2v" path="res://scenes/garden_manager.tscn" id="4_k0juu"]
+[ext_resource type="PackedScene" uid="uid://dl1054h4pdayt" path="res://scripts/utility/debug_scene_b/debug_manager.tscn" id="5_71j4m"]
+[ext_resource type="PackedScene" uid="uid://dlc14tyl5dcuf" path="res://scenes/game_manager.tscn" id="6_qfnet"]
+
+[node name="world" type="Node2D"]
+z_as_relative = false
+y_sort_enabled = true
+
+[node name="tony" parent="." instance=ExtResource("1_4wyf3")]
+position = Vector2(134, 112)
+
+[node name="box" parent="." node_paths=PackedStringArray("garden_manager") instance=ExtResource("2_k0juu")]
+position = Vector2(24, 23)
+garden_manager = NodePath("../garden_manager")
+
+[node name="garden_manager" parent="." instance=ExtResource("4_k0juu")]
+y_sort_enabled = true
+
+[node name="animal_manager" parent="." node_paths=PackedStringArray("garden_manager") instance=ExtResource("3_71j4m")]
+z_index = 0
+z_as_relative = true
+garden_manager = NodePath("../garden_manager")
+spawn_rate = 1.0
+spawn_chance = 0.2
+steal_rates = [2.5, 2, 1.5]
+
+[node name="game_manager" parent="." node_paths=PackedStringArray("garden_manager", "animal_manager") instance=ExtResource("6_qfnet")]
+garden_manager = NodePath("../garden_manager")
+animal_manager = NodePath("../animal_manager")
+
+[node name="debug_manager" parent="." node_paths=PackedStringArray("player_path", "garden_manager_path") instance=ExtResource("5_71j4m")]
+player_path = NodePath("../tony")
+garden_manager_path = NodePath("../garden_manager")
+ui_offset = Vector2(210, 50)

@@ -1,0 +1,37 @@
+the animal manager manages animals
+
+let's start with one of the central functions: it's a go-between for the animal 
+spawning with the help of the grid manager
+
+a signal is sent when a radish reaches the sprout state and the adult state
+let's take the adult state for example
+
+once the radish reaches an adult state, a signal is sent so that some function
+in the animal manager will check if there are any spawnable tiles near that
+dirt tile
+
+a spawnable tile will have different rules for different animals
+in the case of a mole, it's a grass tile that's adjacent to that particular dirt
+tile that no other animals or tony are currently occupying.
+	[this reminds me, make a check to see if an animal doesn't spawn because
+	tony is in the way. seems like an interesting / funny thing to keep track of]
+
+once the signal is emitted, there's a chance that a mole will be spawned to
+steal that particular radish. only once the chance condition is passed will the
+spawn process take place.
+
+the spawn process first picks one of the adjacent tiles at random, then checks
+if that tile doesn't have a body on it, then checks if the state is still adult (the radish is still there)
+if all those checks pass, it will spawn a mole there.
+the mole then will do its animation, and if tony doesn't grab the radish before
+the emerging animation ends, the radish will be removed from the grid, and the
+mole will do an exit animation. 
+
+then there should be a cooldown for that particular tile, which adds another
+check. if a tile is on cooldown, another mole can't spawn there until the
+cooldown is over.
+
+all of this is focused on spawning, so maybe that's a component of the animal
+manager. the animal manager also needs to have certain global animal controls
+such as spawn rate, which animals can be spawned (game level dependent), and
+maybe even "speed of stealing", etc.

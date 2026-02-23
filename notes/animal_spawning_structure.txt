@@ -1,0 +1,36 @@
+animal manager
+	fields
+		spawn_chance
+		difficulty_level
+		enemy_spawner
+		
+	functions
+		_on_radish_planted
+			adds a radish to active radishes
+			why?
+		_on_radish_sprouted
+			triggers enemy spawner for deer / rabbits
+		_on_radish_matured
+			triggers enemy spawner for moles
+		_on_radish_picked
+			removes radish from active radishes
+			why?
+		get_spawn_chance
+			for enemy spawner, controls
+		get_difficulty
+		set_difficulty
+		
+
+enemy_spawner
+	fields
+		animal_types
+		side_length
+		cell_grid
+	functions
+		spawn_request
+		check_adjacent_grass_tiles
+		create_animal
+		check_tile_occupied
+		
+		
+		

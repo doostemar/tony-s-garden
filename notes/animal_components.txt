@@ -1,0 +1,26 @@
+what would animal components be?
+
+eating_component
+	this determines that animals can eat
+		- it would need information such as, what STAGE of the plant does the animal eat
+		- the DURATION of the action of eating
+
+spawn_component
+	this determines how the animals appear in the garden
+		-it would need information like WHERE the animal appears
+			perhaps this is an enumerated type that categories kinds of spawning
+			from the left, from the right, from in the garden, etc.
+
+with things like this, you build a scene, right?
+the scene will basically be a prefab for a particular animal, like a mole
+
+the mole should have:
+	animation node
+	collision for turnips
+	collision for shouting
+	eating_component
+	spawn_component
+
+these nodes define the scene
+and the scene itself becomes a child node of the world with the help of an animal manager
+or something like that

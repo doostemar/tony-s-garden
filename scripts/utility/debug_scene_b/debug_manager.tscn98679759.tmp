@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dl1054h4pdayt"]
+
+[ext_resource type="Script" uid="uid://ck0xturrh3v3q" path="res://scripts/utility/debug_scene_b/debug_manager.gd" id="1_rj4ge"]
+[ext_resource type="Script" uid="uid://boyf44oo3stk6" path="res://scripts/utility/debug_scene_b/debug_console.gd" id="2_nnd44"]
+[ext_resource type="Script" uid="uid://cjdwbqccrlfsj" path="res://scripts/utility/debug_scene_b/debug_player_info.gd" id="4_dnxnp"]
+
+[node name="debug_manager" type="CanvasLayer"]
+script = ExtResource("1_rj4ge")
+
+[node name="debug_console" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_nnd44")
+
+[node name="debug_player_info" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("4_dnxnp")
+panel_position = Vector2(100, 250)

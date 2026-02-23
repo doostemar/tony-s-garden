@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dk7mawygc40ow"]
+
+[ext_resource type="Texture2D" uid="uid://b1w1v2agnr3kl" path="res://sprites/terrain/grass_tile.png" id="1_e1kak"]
+[ext_resource type="Script" uid="uid://c30y63gtj2fj3" path="res://scripts/garden/grass.gd" id="1_yarb5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e1kak"]
+size = Vector2(12, 12)
+
+[node name="grass" type="Area2D"]
+collision_layer = 2
+collision_mask = 17
+script = ExtResource("1_yarb5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_e1kak")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_e1kak")

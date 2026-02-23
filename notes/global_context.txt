@@ -1,0 +1,6 @@
+do we want to keep track of global context?
+
+like what
+	radishes we've collected (this for sure)
+	remaining time (sounds like we just need a game manager)
+	how far we are from the quota(yeah we need a game manager)

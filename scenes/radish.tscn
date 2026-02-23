@@ -1,0 +1,127 @@
+[gd_scene load_steps=12 format=3 uid="uid://dnpvxx6o2yjnb"]
+
+[ext_resource type="Script" uid="uid://dd8a21a1sbe1k" path="res://scripts/garden/radish.gd" id="1_i34ss"]
+[ext_resource type="Texture2D" uid="uid://cerhhdp32wh5o" path="res://sprites/radish/radish_ready.png" id="2_ggmud"]
+[ext_resource type="Texture2D" uid="uid://drnppfk0s0orv" path="res://sprites/radish/radish_landed.png" id="3_kflq7"]
+[ext_resource type="Texture2D" uid="uid://d0iesksx6i6o6" path="res://sprites/radish/radish_picked-90_1.png" id="4_dg354"]
+[ext_resource type="Texture2D" uid="uid://b3fmla6ydl05v" path="res://sprites/radish/radish_picked-90_2.png" id="5_8r7ty"]
+[ext_resource type="Texture2D" uid="uid://5tr7pb4ditvj" path="res://sprites/radish/radish_picked-90_3.png" id="6_heto5"]
+[ext_resource type="Texture2D" uid="uid://dbqoqh4hhdcc" path="res://sprites/radish/radish_seed.png" id="7_6gfpf"]
+[ext_resource type="Texture2D" uid="uid://b7xfpf6vsrkcw" path="res://sprites/radish/radish_gone.png" id="7_dg354"]
+[ext_resource type="Texture2D" uid="uid://db06vqekmqo0c" path="res://sprites/radish/radish_picked.png" id="7_kflq7"]
+[ext_resource type="Texture2D" uid="uid://b45v8gehgxm7t" path="res://sprites/radish/radish_sprout.png" id="8_5o8ap"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i34ss"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ggmud")
+}],
+"loop": true,
+"name": &"adult",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_8r7ty")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_heto5")
+}],
+"loop": true,
+"name": &"airborne",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_dg354")
+}],
+"loop": false,
+"name": &"disappearing",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_kflq7")
+}],
+"loop": true,
+"name": &"landed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_kflq7")
+}],
+"loop": true,
+"name": &"picked",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_6gfpf")
+}],
+"loop": true,
+"name": &"seed",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_5o8ap")
+}],
+"loop": true,
+"name": &"sprout",
+"speed": 5.0
+}]
+
+[node name="radish" type="Node2D" node_paths=PackedStringArray("radish_animations")]
+script = ExtResource("1_i34ss")
+radish_animations = NodePath("AnimatedSprite2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_i34ss")
+animation = &"seed"

@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1aef0h0nie24"]
+
+[ext_resource type="Script" uid="uid://dnsq6omdk15v5" path="res://scripts/animals/animal_manager.gd" id="1_pjtaj"]
+[ext_resource type="Script" uid="uid://csnw2iu2hl2yn" path="res://scripts/animals/animal_context.gd" id="2_isr3r"]
+[ext_resource type="Script" uid="uid://ba262wevrk1t7" path="res://scripts/animals/spawn_helper.gd" id="2_v6dhp"]
+[ext_resource type="Script" uid="uid://cqp17177q4ubj" path="res://scripts/animals/enemy_factory.gd" id="4_vvsfx"]
+
+[node name="animal_manager" type="Node2D" node_paths=PackedStringArray("spawn_helper", "factory", "context")]
+z_index = 1
+z_as_relative = false
+y_sort_enabled = true
+script = ExtResource("1_pjtaj")
+spawn_helper = NodePath("spawn_helper")
+factory = NodePath("enemy_factory")
+context = NodePath("animal_context")
+spawn_rate = null
+spawn_chance = null
+steal_rates = null
+
+[node name="animal_context" type="Node" parent="."]
+script = ExtResource("2_isr3r")
+
+[node name="spawn_helper" type="Node" parent="." node_paths=PackedStringArray("context", "factory")]
+script = ExtResource("2_v6dhp")
+context = NodePath("../animal_context")
+factory = NodePath("../enemy_factory")
+
+[node name="enemy_factory" type="Node" parent="." node_paths=PackedStringArray("context")]
+script = ExtResource("4_vvsfx")
+context = NodePath("../animal_context")

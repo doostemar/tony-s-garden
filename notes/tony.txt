@@ -1,0 +1,3 @@
+how are we setting up tony?
+
+does tony need a state machine?

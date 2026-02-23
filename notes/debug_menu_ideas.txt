@@ -1,0 +1,14 @@
+what kind of options do we want to change while the game is running?
+	these would be things we need to change while the game is live because maybe it would be annoying
+	to have to close out, change the parameters in the inspector, and reload the game
+
+regenerate / restart level
+	you should be able to simply press a button and remove everything in the garden and start
+	the level over
+	you should be able to set new parameters for level generation if you want
+		side length, fill factor, animal aggression etc.
+	you should be able to restart the level you're currently on, without a new randomized one, 
+	so you keep the level you're on and it just resets the timer and all of your level progress
+
+show/hide debug information
+	collision shapes, paths, labels, etc.
