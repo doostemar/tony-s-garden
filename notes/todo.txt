@@ -1,5 +1,14 @@
 various to-do's:
 
+fix throwing
+
+weather system (it should rain for the plants to grow)
+rain dance (tony forces rain)
+store / items / economy (radishes sold for money or eaten, store offers items)
+tony buffs (from eating radishes)
+
+
+--------------------------------------------------------------------------------
 
 debug ui
 -----------------------

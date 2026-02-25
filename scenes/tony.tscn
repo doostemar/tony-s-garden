@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://bc815ejajxw2d"]
+[gd_scene load_steps=63 format=3 uid="uid://bc815ejajxw2d"]
 
 [ext_resource type="Texture2D" uid="uid://bltc0qluloure" path="res://sprites/tony/tony-spritesheet-full-1.png" id="1_adt52"]
 [ext_resource type="Script" uid="uid://doqw8r20d25v2" path="res://scripts/tony/tony.gd" id="1_n2y5k"]
@@ -6,12 +6,13 @@
 [ext_resource type="Script" uid="uid://cgf2bsjjleuks" path="res://scripts/tony/tony_animations.gd" id="3_3rdv2"]
 [ext_resource type="Script" uid="uid://bi08s4lqjhru8" path="res://scripts/tony/tony_movement.gd" id="3_4qx15"]
 [ext_resource type="Script" uid="uid://c8p0tguohkoeq" path="res://scripts/tony/input_manager.gd" id="5_es3yn"]
-[ext_resource type="Script" uid="uid://1xr688dq4kov" path="res://scripts/tony/dirt_interaction.gd" id="6_v1ma3"]
 [ext_resource type="Script" uid="uid://d0b6bl1ae20as" path="res://scripts/tony/shout_component.gd" id="7_py7je"]
 [ext_resource type="Script" uid="uid://b12m1b13mda3a" path="res://scripts/tony/carry_manager.gd" id="8_uy056"]
 [ext_resource type="Script" uid="uid://ds1yrbusraqjm" path="res://scripts/tony/carry_visual.gd" id="9_frrmu"]
 [ext_resource type="Script" uid="uid://dp8tpt15is631" path="res://scripts/tony/box_deposit.gd" id="10_icr8t"]
 [ext_resource type="Script" uid="uid://q4c4atu8e0pg" path="res://scripts/tony/throw_component.gd" id="12_l7wjg"]
+[ext_resource type="Script" uid="uid://u0iqe0a0pwlk" path="res://scenes/plant_component.gd" id="13_ecxxv"]
+[ext_resource type="Script" uid="uid://crtqv7vygo8kf" path="res://scenes/pickup_component.gd" id="14_dsoo0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ekprb"]
 radius = 4.98
@@ -493,14 +494,15 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="tony" type="CharacterBody2D" node_paths=PackedStringArray("movement_component", "input_manager", "animation_component", "dirt_interaction", "carry_manager", "context", "box_deposit", "shout_component", "throw_component")]
+[node name="tony" type="CharacterBody2D" node_paths=PackedStringArray("movement_component", "input_manager", "animation_component", "plant_component", "pickup_component", "carry_manager", "context", "box_deposit", "shout_component", "throw_component")]
 z_index = 1
 collision_mask = 24
 script = ExtResource("1_n2y5k")
 movement_component = NodePath("tony_movement")
 input_manager = NodePath("input_manager")
 animation_component = NodePath("tony_animations")
-dirt_interaction = NodePath("dirt_interaction")
+plant_component = NodePath("plant_component")
+pickup_component = NodePath("pickup_component")
 carry_manager = NodePath("carry_manager")
 context = NodePath("tony_context")
 box_deposit = NodePath("box_deposit")
@@ -521,12 +523,6 @@ input_manager = NodePath("../input_manager")
 
 [node name="input_manager" type="Node2D" parent="."]
 script = ExtResource("5_es3yn")
-
-[node name="dirt_interaction" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager", "context")]
-position = Vector2(0, 1)
-script = ExtResource("6_v1ma3")
-carry_manager = NodePath("../carry_manager")
-context = NodePath("../tony_context")
 
 [node name="shout_component" type="Node2D" parent="." node_paths=PackedStringArray("context")]
 script = ExtResource("7_py7je")
@@ -560,3 +556,10 @@ context = NodePath("../tony_context")
 script = ExtResource("12_l7wjg")
 carry_manager = NodePath("../carry_manager")
 context = NodePath("../tony_context")
+
+[node name="plant_component" type="Node2D" parent="."]
+script = ExtResource("13_ecxxv")
+
+[node name="pickup_component" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager")]
+script = ExtResource("14_dsoo0")
+carry_manager = NodePath("../carry_manager")
