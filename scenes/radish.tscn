@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://dnpvxx6o2yjnb"]
 
-[ext_resource type="Script" uid="uid://dd8a21a1sbe1k" path="res://scripts/garden/radish.gd" id="1_i34ss"]
+[ext_resource type="Script" uid="uid://dd8a21a1sbe1k" path="res://scripts/radish/radish.gd" id="1_i34ss"]
 [ext_resource type="Texture2D" uid="uid://cerhhdp32wh5o" path="res://sprites/radish/radish_ready.png" id="2_ggmud"]
 [ext_resource type="Texture2D" uid="uid://drnppfk0s0orv" path="res://sprites/radish/radish_landed.png" id="3_kflq7"]
 [ext_resource type="Texture2D" uid="uid://d0iesksx6i6o6" path="res://sprites/radish/radish_picked-90_1.png" id="4_dg354"]

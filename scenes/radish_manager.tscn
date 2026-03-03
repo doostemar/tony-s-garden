@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://3j5smt44r3fl"]
+[gd_scene load_steps=2 format=3 uid="uid://ced51xn7dd1rw"]
 
-[ext_resource type="Script" uid="uid://dy1kmgjlxbuq5" path="res://scripts/garden/radish_manager.gd" id="1_4c88a"]
+[ext_resource type="Script" uid="uid://br7v4udnfwlij" path="res://scripts/radish/radish_manager.gd" id="1_4c88a"]
 
 [node name="radish_manager" type="Node2D"]
 script = ExtResource("1_4c88a")

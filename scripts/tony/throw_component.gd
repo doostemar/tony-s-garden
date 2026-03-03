@@ -1,4 +1,3 @@
-# throw_component.gd
 class_name Throw_Component
 extends Node2D
 
@@ -25,44 +24,44 @@ func throw() -> bool:
 	if not carry_manager or not context:
 		push_warning("Throw_Component: Missing required references")
 		return false
-	
+
 	if carry_manager.is_hand_empty():
 		return false
-	
+
 	var radish = carry_manager.get_held_item()
 	if not radish or not is_instance_valid(radish):
 		return false
-	
+
 	carry_manager.clear_hand()
-	
+
 	_thrown_radish = radish
-	
-	get_tree().current_scene.add_child(_thrown_radish)
-	
+
 	var direction = DIRECTION_VECTORS.get(context.last_dir, Vector2.DOWN)
 	_throw_velocity = direction * throw_speed
 	_throw_distance_remaining = base_strength
-	
+
 	_thrown_radish.global_position = global_position + Vector2(0, -10)
-	
+
+	_thrown_radish.change_state(Radish.RadishState.AIRBORNE)
+	_thrown_radish.set_holder(null)
+
 	set_physics_process(true)
-	
+
 	if event_bus.has_signal("radish_thrown"):
-		_thrown_radish.change_state(Radish.RadishState.AIRBORNE)
 		event_bus.radish_thrown.emit(_thrown_radish, global_position, direction)
-	
+
 	return true
 
 func _physics_process(delta: float) -> void:
 	if not _thrown_radish or not is_instance_valid(_thrown_radish):
 		_end_throw()
 		return
-	
+
 	var movement = _throw_velocity * delta
 	_thrown_radish.global_position += movement
-	
+
 	_throw_distance_remaining -= movement.length()
-	
+
 	if _throw_distance_remaining <= 0:
 		_land_radish()
 
@@ -70,13 +69,12 @@ func _land_radish() -> void:
 	if not _thrown_radish:
 		_end_throw()
 		return
-	
-	var landing_position = _thrown_radish.global_position
-	
+
+	_thrown_radish.change_state(Radish.RadishState.LANDED)
+
 	if event_bus.has_signal("radish_landed_on_ground"):
-		_thrown_radish.change_state(Radish.RadishState.LANDED)
-		event_bus.radish_landed_on_ground.emit(_thrown_radish, landing_position)
-	
+		event_bus.radish_landed_on_ground.emit(_thrown_radish, _thrown_radish.global_position)
+
 	_end_throw()
 
 func _end_throw() -> void:

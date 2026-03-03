@@ -11,8 +11,8 @@
 [ext_resource type="Script" uid="uid://ds1yrbusraqjm" path="res://scripts/tony/carry_visual.gd" id="9_frrmu"]
 [ext_resource type="Script" uid="uid://dp8tpt15is631" path="res://scripts/tony/box_deposit.gd" id="10_icr8t"]
 [ext_resource type="Script" uid="uid://q4c4atu8e0pg" path="res://scripts/tony/throw_component.gd" id="12_l7wjg"]
-[ext_resource type="Script" uid="uid://u0iqe0a0pwlk" path="res://scenes/plant_component.gd" id="13_ecxxv"]
-[ext_resource type="Script" uid="uid://crtqv7vygo8kf" path="res://scenes/pickup_component.gd" id="14_dsoo0"]
+[ext_resource type="Script" uid="uid://u0iqe0a0pwlk" path="res://scripts/tony/plant_component.gd" id="13_ecxxv"]
+[ext_resource type="Script" uid="uid://crtqv7vygo8kf" path="res://scripts/tony/pickup_component.gd" id="14_dsoo0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ekprb"]
 radius = 4.98

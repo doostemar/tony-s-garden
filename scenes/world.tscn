@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://mtxx7hwyh0to"]
+[gd_scene load_steps=8 format=3 uid="uid://mtxx7hwyh0to"]
 
 [ext_resource type="PackedScene" uid="uid://bc815ejajxw2d" path="res://scenes/tony.tscn" id="1_4wyf3"]
 [ext_resource type="PackedScene" uid="uid://bigi8me8uap1h" path="res://scenes/box.tscn" id="2_k0juu"]
 [ext_resource type="PackedScene" uid="uid://b1aef0h0nie24" path="res://scenes/animal_manager.tscn" id="3_71j4m"]
 [ext_resource type="PackedScene" uid="uid://bcit5alt76l2v" path="res://scenes/garden_manager.tscn" id="4_k0juu"]
-[ext_resource type="PackedScene" uid="uid://dl1054h4pdayt" path="res://scripts/utility/debug_scene_b/debug_manager.tscn" id="5_71j4m"]
+[ext_resource type="PackedScene" uid="uid://dl1054h4pdayt" path="res://scenes/debug_manager.tscn" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://dlc14tyl5dcuf" path="res://scenes/game_manager.tscn" id="6_qfnet"]
+[ext_resource type="PackedScene" uid="uid://ced51xn7dd1rw" path="res://scenes/radish_manager.tscn" id="7_i7141"]
 
 [node name="world" type="Node2D"]
 z_as_relative = false
@@ -37,3 +38,6 @@ animal_manager = NodePath("../animal_manager")
 player_path = NodePath("../tony")
 garden_manager_path = NodePath("../garden_manager")
 ui_offset = Vector2(210, 50)
+
+[node name="radish_manager" parent="." instance=ExtResource("7_i7141")]
+y_sort_enabled = true
