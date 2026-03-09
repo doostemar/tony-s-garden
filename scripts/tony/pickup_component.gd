@@ -50,7 +50,7 @@ func pickup() -> bool:
 
 func _do_pickup(radish: Radish) -> bool:
 	event_bus.radish_picked.emit(radish, radish.global_position, radish.get_grid_coords())
-	radish.set_holder(parent, Vector2(0, -10))
+	radish.set_holder( parent, Vector2(0, -10) )
 	carry_manager.set_carry_item(ITEM_RADISH, Tony_Context.CarryState.RADISH, radish)
 	return true
 

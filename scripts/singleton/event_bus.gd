@@ -11,7 +11,7 @@ signal radish_landed( radish )
 signal radish_targeted( world_pos: Vector2 )
 signal radish_thrown(radish: Radish, position: Vector2, direction: Vector2)
 signal radish_landed_on_ground(radish: Radish, position: Vector2)
-signal radish_spawn_requested(dirt, grid_coords: Vector2i)
+signal radish_spawn_requested(dirt, grid_coords: Vector2i, world_pos: Vector2)
 signal radish_destroy_requested(radish)
 
 # garden lifecycle / layout

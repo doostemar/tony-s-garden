@@ -15,12 +15,12 @@ signal shout_radius_changed( shout_radius_mult: float ) # shout radius will chan
 
 # members (with getters and setters because they have extra logic)
 # really cool
-var last_dir: int = Direction.DOWN     : get = get_last_dir, set = set_last_dir
-var is_moving: bool = false            : get = get_is_moving, set = set_is_moving
-var speed_mult: float = 1.0            : get = get_speed_mult, set = set_speed_mult
+var last_dir: int = Direction.DOWN     : get = get_last_dir,          set = set_last_dir
+var is_moving: bool = false            : get = get_is_moving,         set = set_is_moving
+var speed_mult: float = 1.0            : get = get_speed_mult,        set = set_speed_mult
 var shout_radius_mult: float = 1.0     : get = get_shout_radius_mult, set = set_shout_radius_mult
-var carry_state: int = CarryState.NONE : get = get_carry_state, set = set_carry_state
-var item_in_hand_id: StringName = &""  : get = get_item_in_hand_id, set = set_item_in_hand_id
+var carry_state: int = CarryState.NONE : get = get_carry_state,       set = set_carry_state
+var item_in_hand_id: StringName = &""  : get = get_item_in_hand_id,   set = set_item_in_hand_id
 
 # setters and getters below, these trigger the signals
 func get_last_dir() -> int:

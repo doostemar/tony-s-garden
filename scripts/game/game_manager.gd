@@ -12,6 +12,7 @@ signal timer_paused_changed(is_paused: bool)
 signal awaiting_continue_changed(is_waiting: bool)
 
 @export var garden_manager: Garden_Manager
+@export var radish_manager: Radish_Manager
 @export var animal_manager: Node2D
 @export var day_configs: Array[DayConfig] = []
 @export var auto_start_day_one: bool = true
@@ -126,6 +127,7 @@ func start_day(day_index: int = -1) -> void:
 
 func _apply_day_config(config: DayConfig) -> void:
 	event_bus.difficulty_changed.emit(config.difficulty)
+	_reset_radish_manager()
 	_reset_animal_manager()
 	if garden_manager:
 		garden_manager.side_length = config.garden_side_length
@@ -234,6 +236,9 @@ func debug_set_quota(new_quota: int) -> void:
 	quota_updated.emit(current_quota_progress, config.quota)
 	print("GameManager: Quota changed to %d" % config.quota)
 
+func _reset_radish_manager():
+	await(radish_manager.reset())
+
 func debug_reset_day() -> void:
 	var config := _get_current_config()
 	if not config:
@@ -247,6 +252,7 @@ func debug_reset_day() -> void:
 	awaiting_continue = false
 	
 	_reset_animal_manager()
+	_reset_radish_manager()
 	
 	if garden_manager:
 		garden_manager.side_length = config.garden_side_length

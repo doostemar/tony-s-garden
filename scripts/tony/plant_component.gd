@@ -34,21 +34,21 @@ func plant() -> bool:
 	var tiles: Array[Area2D] = plant_area.get_overlapping_areas()
 	if tiles.is_empty():
 		return false
-
-	var target := _nearest_tile_with_state(tiles, EMPTY)
+	
+	var target := _nearest_empty_tile( tiles )
 	if target and target.has_method("make_plant"):
 		target.make_plant()
 		return true
 	return false
 
-func _nearest_tile_with_state(tiles: Array, desired_state: int) -> Node:
+func _nearest_empty_tile( tiles: Array ) -> Node:
 	var best: Node = null
 	var best_d2 := INF
 	var origin := (parent as Node2D).global_position if parent else global_position
 	for t in tiles:
-		if not t.has_method("get_radish_state"):
+		if not t.has_method("has_radish"):
 			continue
-		if t.get_radish_state() != desired_state:
+		if t.has_radish():
 			continue
 		var d2 := origin.distance_squared_to(t.global_position)
 		if d2 < best_d2:

@@ -43,8 +43,7 @@ func draw_grid():
 			var cell := create_cell(type, world_pos, grid_coords)
 			grid[y][x] = cell
 
-# cell_dict is now cleared here alongside grid so no
-# stale references survive a regeneration.
+# currently only used in this script
 func clear_grid():
 	for row in grid:
 		for cell in row:

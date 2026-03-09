@@ -30,8 +30,9 @@ spawn_rate = 1.0
 spawn_chance = 0.2
 steal_rates = [2.5, 2, 1.5]
 
-[node name="game_manager" parent="." node_paths=PackedStringArray("garden_manager", "animal_manager") instance=ExtResource("6_qfnet")]
+[node name="game_manager" parent="." node_paths=PackedStringArray("garden_manager", "radish_manager", "animal_manager") instance=ExtResource("6_qfnet")]
 garden_manager = NodePath("../garden_manager")
+radish_manager = NodePath("../radish_manager")
 animal_manager = NodePath("../animal_manager")
 
 [node name="debug_manager" parent="." node_paths=PackedStringArray("player_path", "garden_manager_path") instance=ExtResource("5_71j4m")]

@@ -1,4 +1,4 @@
-class_name Array_Block_Generator
+class_name Array_Gen_Blocks
 extends Node2D
 
 @export var fill: float # how filled the garden is with soil (still used to control density)
