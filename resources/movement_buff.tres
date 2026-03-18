@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Buff_Definition" load_steps=2 format=3 uid="uid://8mho4ogamt6e"]
+
+[ext_resource type="Script" uid="uid://56mcrlwv6exc" path="res://scripts/tony/buff_definition.gd" id="1_3t615"]
+
+[resource]
+script = ExtResource("1_3t615")
+buff_id = &"move_speed"
+display_name = "QUICK FEET"
+flavor_text = "Tony feels lighter!"
+stat_type = 0
+modifier_per_tier = 0.2
+max_tier = 3
+duplicates_upgrade = true
+metadata/_custom_type_script = "uid://56mcrlwv6exc"

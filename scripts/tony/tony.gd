@@ -11,6 +11,7 @@ extends CharacterBody2D
 @export var box_deposit: Box_Deposit
 @export var shout_component: Shout_Component
 @export var throw_component: Throw_Component
+@export var buff_manager: Buff_Manager
 
 # variables
 @export var movement_speed: float = 1.3
@@ -35,12 +36,16 @@ func _ready():
 	input_manager.dance_pressed.connect(_on_action_dance)
 	input_manager.shout_pressed.connect(_on_action_shout)
 
+	# debug for seeing buff results in output
+	if buff_manager:
+		buff_manager.radish_buff_rolled.connect(_on_radish_buff_rolled)
+
 func _physics_process(delta):
 	input_manager.process_input()
 	var movement = movement_component.move()
 	move_and_collide(movement)
 
-# ---- actions ----
+# ---- actions ---- #
 
 func _on_action_plant():
 	if carry_manager.is_hand_empty():
@@ -64,7 +69,25 @@ func _throw() -> void:
 func _on_action_dance():
 	print("dancing")
 
-# ---- helpers (deprecated) ----
+# helper for future shop integration
+func apply_item_buff(buff: Buff_Definition) -> void:
+	if buff_manager == null:
+		push_warning("Tony.apply_item_buff: buff_manager not assigned")
+		return
+	buff_manager.apply_buff(buff, &"shop_item")
+
+# helper for radish consumption
+# returns the rolled buff so UI / dialogue systems can display flavor text later
+func eat_radish_for_buff() -> Buff_Definition:
+	if buff_manager == null:
+		push_warning("Tony.eat_radish_for_buff: buff_manager not assigned")
+		return null
+	return buff_manager.apply_random_radish_buff()
+
+func _on_radish_buff_rolled(buff: Buff_Definition, new_tier: int, flavor_text: String) -> void:
+	print("Radish buff rolled: ", buff.display_name, " tier ", new_tier, " | ", flavor_text)
+
+# ---- helpers (deprecated) ---- #
 
 func get_movement_input_stack() -> Array[String]:
 	if input_manager and input_manager.has_method("get_movement_input_stack"):

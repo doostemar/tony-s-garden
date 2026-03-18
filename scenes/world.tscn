@@ -35,10 +35,7 @@ garden_manager = NodePath("../garden_manager")
 radish_manager = NodePath("../radish_manager")
 animal_manager = NodePath("../animal_manager")
 
-[node name="debug_manager" parent="." node_paths=PackedStringArray("player_path", "garden_manager_path") instance=ExtResource("5_71j4m")]
-player_path = NodePath("../tony")
-garden_manager_path = NodePath("../garden_manager")
-ui_offset = Vector2(210, 50)
+[node name="debug_manager" parent="." instance=ExtResource("5_71j4m")]
 
 [node name="radish_manager" parent="." instance=ExtResource("7_i7141")]
 y_sort_enabled = true

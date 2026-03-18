@@ -33,13 +33,14 @@ func throw() -> bool:
 		return false
 
 	carry_manager.clear_hand()
-
 	_thrown_radish = radish
 
 	var direction = DIRECTION_VECTORS.get(context.last_dir, Vector2.DOWN)
-	_throw_velocity = direction * throw_speed
-	_throw_distance_remaining = base_strength
 
+	var speed_mult := context.throw_speed_mult if context else 1.0
+	_throw_velocity = direction * (throw_speed * speed_mult)
+
+	_throw_distance_remaining = base_strength
 	_thrown_radish.global_position = global_position + Vector2(0, -10)
 
 	_thrown_radish.change_state(Radish.RadishState.AIRBORNE)
@@ -57,7 +58,7 @@ func _physics_process(delta: float) -> void:
 		_end_throw()
 		return
 
-	var movement = _throw_velocity * delta
+	var movement := _throw_velocity * delta
 	_thrown_radish.global_position += movement
 
 	_throw_distance_remaining -= movement.length()
