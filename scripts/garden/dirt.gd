@@ -21,3 +21,6 @@ func assign_radish(r: Radish) -> void:
 func has_radish() -> bool:
 	if radish: return true
 	return false
+
+func clear_radish():
+	if radish: radish = null

@@ -22,7 +22,7 @@ var _follow_offset: Vector2 = Vector2.ZERO
 var pickup_area: Area2D
 var pickup_collision: CollisionShape2D
 @export var pickup_collision_radius: float = 4.0
-@export var radish_layer_bit: int = 3
+@export var radish_layer_bit: int = 6
 
 func init(grid_coords: Vector2i, initial_holder: Node2D = null) -> void:
 	_grid_coords = grid_coords
@@ -67,7 +67,7 @@ func set_holder(new_holder: Node2D, offset: Vector2 = Vector2.ZERO) -> void:
 	_update_visibility()
 
 func is_pickable() -> bool:
-	return current_state == RadishState.ADULT or current_state == RadishState.LANDED
+	return current_state != RadishState.SEED and current_state != RadishState.SPROUT
 
 func _update_pickup_collision() -> void:
 	if pickup_collision:
@@ -79,7 +79,7 @@ func _update_visibility() -> void:
 	else:
 		visible = true
 
-# --- state ---
+# --- state --- #
 
 func change_state(new_state: RadishState) -> void:
 	current_state = new_state

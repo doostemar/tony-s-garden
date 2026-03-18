@@ -1,6 +1,5 @@
 various to-do's:
 
-make radish creation / deletion signal based, remove group injection in dirt tiles
 make the box accept thrown radishes
 
 weather system (it should rain for the plants to grow)

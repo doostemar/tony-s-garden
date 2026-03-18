@@ -1,7 +1,7 @@
 extends Node2D
 class_name Pickup_Component
 
-@export var radish_layer_bit: int = 3
+@export var radish_layer_bit: int = 6
 @export var collision_offset: Vector2 = Vector2(0, 0)
 @export var carry_manager: Carry_Manager
 
