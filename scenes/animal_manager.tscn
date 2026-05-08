@@ -13,9 +13,6 @@ script = ExtResource("1_pjtaj")
 spawn_helper = NodePath("spawn_helper")
 factory = NodePath("enemy_factory")
 context = NodePath("animal_context")
-spawn_rate = null
-spawn_chance = null
-steal_rates = null
 
 [node name="animal_context" type="Node" parent="."]
 script = ExtResource("2_isr3r")

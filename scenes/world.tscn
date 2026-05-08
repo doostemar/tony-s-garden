@@ -21,21 +21,21 @@ garden_manager = NodePath("../garden_manager")
 
 [node name="garden_manager" parent="." instance=ExtResource("4_k0juu")]
 y_sort_enabled = true
+fill_factor = 0.23
 
 [node name="animal_manager" parent="." node_paths=PackedStringArray("garden_manager") instance=ExtResource("3_71j4m")]
 z_index = 0
 z_as_relative = true
 garden_manager = NodePath("../garden_manager")
-spawn_rate = 1.0
-spawn_chance = 0.2
-steal_rates = [2.5, 2, 1.5]
 
 [node name="game_manager" parent="." node_paths=PackedStringArray("garden_manager", "radish_manager", "animal_manager") instance=ExtResource("6_qfnet")]
 garden_manager = NodePath("../garden_manager")
 radish_manager = NodePath("../radish_manager")
 animal_manager = NodePath("../animal_manager")
 
-[node name="debug_manager" parent="." instance=ExtResource("5_71j4m")]
+[node name="debug_manager" parent="." node_paths=PackedStringArray("player_path", "garden_manager_path") instance=ExtResource("5_71j4m")]
+player_path = NodePath("../tony")
+garden_manager_path = NodePath("../garden_manager")
 
 [node name="radish_manager" parent="." instance=ExtResource("7_i7141")]
 y_sort_enabled = true

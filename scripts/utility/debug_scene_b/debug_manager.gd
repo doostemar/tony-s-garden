@@ -1,4 +1,3 @@
-# debug_manager.gd
 class_name DebugManager
 extends CanvasLayer
 
@@ -22,6 +21,12 @@ var _toggle_button: Button
 var _menu_panel: Panel
 var _menu_container: VBoxContainer
 var _module_buttons: Dictionary = {}
+
+# Drag variables
+var _regenerate_button: Button
+var _is_dragging: bool = false
+var _drag_start_mouse_pos: Vector2
+var _panel_start_pos: Vector2
 
 func _ready() -> void:
 	player = player_path
@@ -47,16 +52,10 @@ func _ready() -> void:
 # --- Focus clearing --- #
 
 func _input(event: InputEvent) -> void:
-	# after any mouse click anywhere, release focus from UI controls.
-	# this prevents buttons/spinboxes from consuming spacebar or other
-	# game inputs after being clicked
 	if event is InputEventMouseButton and event.pressed == false:
 		_clear_ui_focus()
 
 func _clear_ui_focus() -> void:
-	# releasing focus from the current focused control is enough
-	# the viewport will hold no focused control until the player clicks
-	# a ui element again
 	var focused := get_viewport().gui_get_focus_owner()
 	if focused:
 		focused.release_focus()
@@ -76,7 +75,6 @@ func _create_toggle_button() -> void:
 	_toggle_button.text = "Debug"
 	_toggle_button.size = toggle_button_size
 	_toggle_button.pressed.connect(_on_toggle_button_pressed)
-	# Prevent the toggle button itself from holding focus
 	_toggle_button.focus_mode = Control.FOCUS_NONE
 	button_container.add_child(_toggle_button)
 
@@ -85,6 +83,7 @@ func _create_debug_menu() -> void:
 	_menu_panel.name = "DebugMenuPanel"
 	_menu_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	_menu_panel.position = Vector2(10, 50)
+	_menu_panel.gui_input.connect(_on_menu_gui_input)
 	add_child(_menu_panel)
 	
 	var vbox := VBoxContainer.new()
@@ -105,6 +104,14 @@ func _create_debug_menu() -> void:
 	vbox.add_child(_menu_container)
 	
 	_add_collision_toggle(vbox)
+	
+	_regenerate_button = Button.new()
+	_regenerate_button.name = "RegenerateGardenButton"
+	_regenerate_button.text = "Regenerate Garden"
+	_regenerate_button.focus_mode = Control.FOCUS_NONE
+	_regenerate_button.pressed.connect(_on_regenerate_button_pressed)
+	vbox.add_child(_regenerate_button)
+	
 	_update_menu_size()
 
 func _add_collision_toggle(parent: VBoxContainer) -> void:
@@ -216,3 +223,32 @@ func is_debug_menu_open() -> bool:
 
 func set_debug_menu_open(is_open: bool) -> void:
 	_set_debug_menu_open(is_open)
+
+# --- New Functions --- #
+
+func _on_regenerate_button_pressed() -> void:
+	if garden_manager:
+		garden_manager.regenerate_garden()
+		var console := get_console()
+		if console:
+			console.log_message("Garden regeneration triggered.")
+
+func _on_menu_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_is_dragging = true
+			_drag_start_mouse_pos = get_viewport().get_mouse_position()
+			_panel_start_pos = _menu_panel.position
+			var console := get_console()
+			if console:
+				console.log_message("Debug menu clicked. Start position: %s" % _panel_start_pos)
+		elif _is_dragging:
+			_is_dragging = false
+			var console := get_console()
+			if console:
+				console.log_message("Debug menu released. Start position: %s, End position: %s" % [_panel_start_pos, _menu_panel.position])
+	elif event is InputEventMouseMotion and _is_dragging:
+		var mouse_global = get_viewport().get_mouse_position()
+		var delta = mouse_global - _drag_start_mouse_pos
+		_menu_panel.position = _panel_start_pos + delta
+		_menu_panel.accept_event()

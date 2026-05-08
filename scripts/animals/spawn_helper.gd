@@ -1,3 +1,4 @@
+# spawn_helper.gd
 class_name Spawn_Helper
 extends Node
 
