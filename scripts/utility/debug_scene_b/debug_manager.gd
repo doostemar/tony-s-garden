@@ -1,3 +1,4 @@
+# debug_manager.gd
 class_name DebugManager
 extends CanvasLayer
 
@@ -28,6 +29,9 @@ var _is_dragging: bool = false
 var _drag_start_mouse_pos: Vector2
 var _panel_start_pos: Vector2
 
+# for shop
+var _suspended: bool = false
+
 func _ready() -> void:
 	player = player_path
 	garden_manager = garden_manager_path
@@ -52,8 +56,10 @@ func _ready() -> void:
 # --- Focus clearing --- #
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed == false:
-		_clear_ui_focus()
+	if event is InputEventMouseButton and not event.pressed:
+		var focused := get_viewport().gui_get_focus_owner()
+		if focused and not (focused is BaseButton):
+			focused.release_focus()
 
 func _clear_ui_focus() -> void:
 	var focused := get_viewport().gui_get_focus_owner()
@@ -252,3 +258,9 @@ func _on_menu_gui_input(event: InputEvent) -> void:
 		var delta = mouse_global - _drag_start_mouse_pos
 		_menu_panel.position = _panel_start_pos + delta
 		_menu_panel.accept_event()
+
+func set_suspended(suspended: bool) -> void:
+	_suspended = suspended
+	visible = not suspended
+	if not suspended:
+		_set_debug_menu_open(_debug_menu_open)

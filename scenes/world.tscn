@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://mtxx7hwyh0to"]
+[gd_scene load_steps=9 format=3 uid="uid://mtxx7hwyh0to"]
 
 [ext_resource type="PackedScene" uid="uid://bc815ejajxw2d" path="res://scenes/tony.tscn" id="1_4wyf3"]
 [ext_resource type="PackedScene" uid="uid://bigi8me8uap1h" path="res://scenes/box.tscn" id="2_k0juu"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dl1054h4pdayt" path="res://scenes/debug_manager.tscn" id="5_71j4m"]
 [ext_resource type="PackedScene" uid="uid://dlc14tyl5dcuf" path="res://scenes/game_manager.tscn" id="6_qfnet"]
 [ext_resource type="PackedScene" uid="uid://ced51xn7dd1rw" path="res://scenes/radish_manager.tscn" id="7_i7141"]
+[ext_resource type="Script" uid="uid://dnwrx1ycfmuuy" path="res://scripts/store/shop_ui.gd" id="8_4mrxx"]
 
 [node name="world" type="Node2D"]
 z_as_relative = false
@@ -39,3 +40,9 @@ garden_manager_path = NodePath("../garden_manager")
 
 [node name="radish_manager" parent="." instance=ExtResource("7_i7141")]
 y_sort_enabled = true
+
+[node name="shop_ui" type="CanvasLayer" parent="." node_paths=PackedStringArray("game_manager", "tony", "debug_manager")]
+script = ExtResource("8_4mrxx")
+game_manager = NodePath("../game_manager")
+tony = NodePath("../tony")
+debug_manager = NodePath("../debug_manager")

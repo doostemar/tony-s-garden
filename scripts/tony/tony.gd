@@ -44,6 +44,10 @@ func _physics_process(delta):
 	input_manager.process_input()
 	var movement = movement_component.move()
 	move_and_collide(movement)
+	
+func get_buff_manager() -> Buff_Manager:
+	if !buff_manager: return null
+	return buff_manager
 
 # ---- actions ---- #
 

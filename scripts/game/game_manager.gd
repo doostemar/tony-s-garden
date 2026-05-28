@@ -60,6 +60,9 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if awaiting_continue and event.is_action_pressed("ui_accept"):
+		var shop := get_tree().get_root().find_child("ShopUI", true, false)
+		if shop and shop.visible:
+			return
 		get_viewport().set_input_as_handled()
 		_confirm_continue()
 
