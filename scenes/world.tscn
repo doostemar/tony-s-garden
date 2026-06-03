@@ -41,8 +41,7 @@ garden_manager_path = NodePath("../garden_manager")
 [node name="radish_manager" parent="." instance=ExtResource("7_i7141")]
 y_sort_enabled = true
 
-[node name="shop_ui" type="CanvasLayer" parent="." node_paths=PackedStringArray("game_manager", "tony", "debug_manager")]
+[node name="shop_ui" type="CanvasLayer" parent="." node_paths=PackedStringArray("game_manager", "tony")]
 script = ExtResource("8_4mrxx")
 game_manager = NodePath("../game_manager")
 tony = NodePath("../tony")
-debug_manager = NodePath("../debug_manager")

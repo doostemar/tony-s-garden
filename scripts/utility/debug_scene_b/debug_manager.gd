@@ -1,4 +1,3 @@
-# debug_manager.gd
 class_name DebugManager
 extends CanvasLayer
 
@@ -23,16 +22,15 @@ var _menu_panel: Panel
 var _menu_container: VBoxContainer
 var _module_buttons: Dictionary = {}
 
-# Drag variables
+# drag
 var _regenerate_button: Button
 var _is_dragging: bool = false
 var _drag_start_mouse_pos: Vector2
 var _panel_start_pos: Vector2
 
-# for shop
-var _suspended: bool = false
-
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	player = player_path
 	garden_manager = garden_manager_path
 	
@@ -230,8 +228,6 @@ func is_debug_menu_open() -> bool:
 func set_debug_menu_open(is_open: bool) -> void:
 	_set_debug_menu_open(is_open)
 
-# --- New Functions --- #
-
 func _on_regenerate_button_pressed() -> void:
 	if garden_manager:
 		garden_manager.regenerate_garden()
@@ -258,9 +254,3 @@ func _on_menu_gui_input(event: InputEvent) -> void:
 		var delta = mouse_global - _drag_start_mouse_pos
 		_menu_panel.position = _panel_start_pos + delta
 		_menu_panel.accept_event()
-
-func set_suspended(suspended: bool) -> void:
-	_suspended = suspended
-	visible = not suspended
-	if not suspended:
-		_set_debug_menu_open(_debug_menu_open)

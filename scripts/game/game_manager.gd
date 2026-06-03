@@ -29,6 +29,8 @@ var _last_displayed_second: int = -1
 
 # --- lifecycle --- #
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	_connect_signals()
 	_ensure_default_configs()
 	
@@ -60,6 +62,7 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if awaiting_continue and event.is_action_pressed("ui_accept"):
+
 		var shop := get_tree().get_root().find_child("ShopUI", true, false)
 		if shop and shop.visible:
 			return
@@ -115,6 +118,9 @@ func start_day(day_index: int = -1) -> void:
 	timer_paused = false
 	awaiting_continue = false
 	
+	# unpause the tree so gameplay resumes for the new day
+	get_tree().paused = false
+	
 	_apply_day_config(config)
 	
 	day_started.emit(config.day_number)
@@ -161,13 +167,17 @@ func _end_day() -> void:
 		bonus_updated.emit(bonus_radishes)
 		print("GameManager: Added %d excess radishes to bonus bank (total: %d)" % [excess, bonus_radishes])
 	
+	# freeze all gameplay – tony, animals, radish timers, etc.
+	# nodes with PROCESS_MODE_ALWAYS (GameManager, ShopUI, DebugManager)
+	# keep running.
+	get_tree().paused = true
+	
 	day_ended.emit(success, current_quota_progress, config.quota)
 	
 	print("GameManager: Day %d ended | Success: %s | Harvested: %d/%d" % [
 		config.day_number, success, current_quota_progress, config.quota
 	])
 	
-	# neter waiting state instead of auto-advancing
 	_set_awaiting_continue(true)
 	print("GameManager: Press Enter to continue to next day")
 
@@ -206,7 +216,6 @@ func debug_add_time(amount: float) -> void:
 	time_remaining = max(time_remaining + amount, 0.0)
 	_last_displayed_second = -1
 	
-	# resume day if adding time after it ended
 	if not day_in_progress and time_remaining > 0:
 		_resume_day_from_debug()
 	
@@ -217,7 +226,6 @@ func debug_set_time(value: float) -> void:
 	time_remaining = max(value, 0.0)
 	_last_displayed_second = -1
 	
-	# resume day if setting positive time after it ended
 	if not day_in_progress and time_remaining > 0:
 		_resume_day_from_debug()
 	
@@ -228,7 +236,7 @@ func debug_set_day(day_index: int) -> void:
 	if day_index < 0 or day_index >= day_configs.size():
 		push_warning("GameManager: Invalid day index %d" % day_index)
 		return
-	start_day(day_index)
+	start_day(day_index)  # start_day already unpauses the tree
 	print("GameManager: Jumped to day index %d" % day_index)
 
 func debug_set_quota(new_quota: int) -> void:
@@ -254,6 +262,9 @@ func debug_reset_day() -> void:
 	timer_paused = false
 	awaiting_continue = false
 	
+	# Unpause so gameplay resumes after a debug reset
+	get_tree().paused = false
+	
 	_reset_animal_manager()
 	_reset_radish_manager()
 	
@@ -271,6 +282,8 @@ func debug_reset_day() -> void:
 func _resume_day_from_debug() -> void:
 	day_in_progress = true
 	awaiting_continue = false
+	# Unpause so gameplay resumes when debug restores time
+	get_tree().paused = false
 	timer_paused_changed.emit(timer_paused)
 	awaiting_continue_changed.emit(awaiting_continue)
 	print("GameManager: Day resumed via debug")
