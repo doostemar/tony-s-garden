@@ -40,4 +40,3 @@ func clear_hand() -> void:
 	if context:
 		context.item_in_hand_id = _item_in_hand_id
 		context.carry_state = _carry_state
-		context.speed_mult = 1.0
