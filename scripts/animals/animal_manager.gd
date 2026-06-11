@@ -56,6 +56,11 @@ func reset() -> void:
 	if _spawn_timer:
 		_spawn_timer.stop()
 
+	# actually destroy every living animal node
+	for child in get_children():
+		if child.is_in_group("animal"):
+			child.queue_free()
+
 	_active_creatures.clear()
 	_spawn_targets.clear()
 
