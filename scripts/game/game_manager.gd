@@ -11,6 +11,7 @@ signal bonus_updated(total_bonus: int)
 signal timer_paused_changed(is_paused: bool)
 signal awaiting_continue_changed(is_waiting: bool)
 
+@export var tony: CharacterBody2D 
 @export var garden_manager: Garden_Manager
 @export var radish_manager: Radish_Manager
 @export var animal_manager: Node2D
@@ -27,16 +28,21 @@ var awaiting_continue: bool = false
 
 var _last_displayed_second: int = -1
 
+var _tony_spawn_position: Vector2
+
+
 # --- lifecycle --- #
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-
 	_connect_signals()
 	_ensure_default_configs()
-	
+
+	if tony:
+		_tony_spawn_position = tony.global_position
+
 	if auto_start_day_one:
 		call_deferred("start_day", 0)
-		
+
 	if garden_manager:
 		print("GardenManager path: ", garden_manager.get_path())
 	else:
@@ -105,44 +111,54 @@ func _ensure_default_configs() -> void:
 func start_day(day_index: int = -1) -> void:
 	if day_index >= 0:
 		current_day_index = day_index
-	
+
 	var config := _get_current_config()
 	if not config:
 		push_error("GameManager: No config for day index %d" % current_day_index)
 		return
-	
+
 	current_quota_progress = 0
 	time_remaining = config.time_limit
 	_last_displayed_second = -1
 	day_in_progress = true
 	timer_paused = false
 	awaiting_continue = false
-	
-	# unpause the tree so gameplay resumes for the new day
-	get_tree().paused = false
-	
+
+	# clean up previous day BEFORE unpausing
 	_apply_day_config(config)
-	
+
+	# now unpause so the new day runs cleanly
+	get_tree().paused = false
+
 	day_started.emit(config.day_number)
 	quota_updated.emit(current_quota_progress, config.quota)
 	time_updated.emit(time_remaining)
 	bonus_updated.emit(bonus_radishes)
 	timer_paused_changed.emit(timer_paused)
 	awaiting_continue_changed.emit(awaiting_continue)
-	
+
 	print("GameManager: Day %d started | Quota: %d | Time: %.0fs | Difficulty: %d" % [
 		config.day_number, config.quota, config.time_limit, config.difficulty
 	])
 
 func _apply_day_config(config: DayConfig) -> void:
 	event_bus.difficulty_changed.emit(config.difficulty)
-	_reset_radish_manager()
+	_reset_tony()              # clear hand first, then reset position
+	_reset_radish_manager()    # now safe to free all radishes
 	_reset_animal_manager()
 	if garden_manager:
 		garden_manager.side_length = config.garden_side_length
 		garden_manager.regenerate_garden()
 	else:
 		push_warning("GameManager: garden_manager not assigned, cannot resize garden")
+
+func _reset_tony() -> void:
+	if not tony:
+		return
+	# drop whatever Tony is holding so radish_manager can safely free it
+	if tony.carry_manager:
+		tony.carry_manager.clear_hand()
+	tony.global_position = _tony_spawn_position
 
 func _reset_animal_manager() -> void:
 	if animal_manager and animal_manager.has_method("reset"):
@@ -254,30 +270,31 @@ func debug_reset_day() -> void:
 	var config := _get_current_config()
 	if not config:
 		return
-	
+
 	current_quota_progress = 0
 	time_remaining = config.time_limit
 	_last_displayed_second = -1
 	day_in_progress = true
 	timer_paused = false
 	awaiting_continue = false
-	
-	# Unpause so gameplay resumes after a debug reset
-	get_tree().paused = false
-	
+
+	_reset_tony()
 	_reset_animal_manager()
 	_reset_radish_manager()
-	
+
+	get_tree().paused = false
+
 	if garden_manager:
 		garden_manager.side_length = config.garden_side_length
 		garden_manager.regenerate_garden()
-	
+
 	quota_updated.emit(current_quota_progress, config.quota)
 	time_updated.emit(time_remaining)
 	timer_paused_changed.emit(timer_paused)
 	awaiting_continue_changed.emit(awaiting_continue)
-	
+
 	print("GameManager: Day %d reset" % config.day_number)
+
 
 func _resume_day_from_debug() -> void:
 	day_in_progress = true

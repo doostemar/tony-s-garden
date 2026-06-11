@@ -50,27 +50,20 @@ func _connect_signals():
 	if event_bus.has_signal("animal_despawned"):   event_bus.animal_despawned.connect(_on_animal_despawned)
 	if context.has_signal("spawn_chance_changed"): context.spawn_chance_changed.connect(_on_spawn_chance_changed)
 
-## clears all tracked state and destroys all active animal instances.
+## destroys all active animal instances.
 ## called at the start of each day and via debug reset.
 func reset() -> void:
-	# stop spawning during reset so the timer callback doesn't race us
 	if _spawn_timer:
 		_spawn_timer.stop()
-	
-	# free every live animal instance
-	for radish in _active_creatures.keys():
-		var animal = _active_creatures[radish]
-		if is_instance_valid(animal):
-			animal.queue_free()
-	
+
 	_active_creatures.clear()
 	_spawn_targets.clear()
-	
-	# restart the spawn timer
+
 	if _spawn_timer:
 		_spawn_timer.start(spawn_rate)
-	
+
 	print("AnimalManager: reset complete")
+
 
 func _on_radish_added(radish, world_pos: Vector2, grid_coords: Vector2i):
 	_spawn_targets[radish] = spawn_helper.find_adjacent_grass_tiles(radish)
