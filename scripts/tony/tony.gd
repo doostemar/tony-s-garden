@@ -9,7 +9,6 @@ extends CharacterBody2D
 @export var pickup_component: Pickup_Component
 @export var carry_manager: Carry_Manager
 @export var context: Tony_Context
-@export var box_deposit: Box_Deposit
 @export var shout_component: Shout_Component
 @export var throw_component: Throw_Component
 @export var buff_manager: Buff_Manager
@@ -18,7 +17,6 @@ extends CharacterBody2D
 @export var movement_speed: float = 1.3
 @export var planting_hitbox_size: float = 3
 @export var pickup_hitbox_size: float = 3
-@export var deposit_hitbox_size: float = 7
 @export var shout_hitbox_size: float = 25
 @export var shout_duration: float = 1
 
@@ -30,7 +28,6 @@ func _ready():
 	animation_component.init()
 	plant_component.init(planting_hitbox_size)
 	pickup_component.init(pickup_hitbox_size)
-	box_deposit.init(deposit_hitbox_size)
 	shout_component.init(shout_hitbox_size, shout_duration)
 
 	input_manager.plant_pressed.connect(_on_action_plant)
@@ -55,7 +52,7 @@ func get_buff_manager() -> Buff_Manager:
 func _on_action_plant():
 	if carry_manager.is_hand_empty():
 		call_deferred("_try_plant_or_pickup")
-	elif not box_deposit.interact():
+	else:
 		_throw()
 
 func _try_plant_or_pickup():

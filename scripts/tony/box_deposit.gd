@@ -1,4 +1,4 @@
-# box_deposit.gd
+# box_deposit.gd **DEPRECATED**
 class_name Box_Deposit
 extends Node2D
 

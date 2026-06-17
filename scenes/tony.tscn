@@ -1,4 +1,4 @@
-[gd_scene load_steps=69 format=3 uid="uid://bc815ejajxw2d"]
+[gd_scene load_steps=68 format=3 uid="uid://bc815ejajxw2d"]
 
 [ext_resource type="Texture2D" uid="uid://bltc0qluloure" path="res://sprites/tony/tony-spritesheet-full-1.png" id="1_adt52"]
 [ext_resource type="Script" uid="uid://doqw8r20d25v2" path="res://scripts/tony/tony.gd" id="1_n2y5k"]
@@ -15,7 +15,6 @@
 [ext_resource type="Resource" uid="uid://frff0qeyr5t1" path="res://resources/shout_buff.tres" id="8_vdebt"]
 [ext_resource type="Resource" uid="uid://cixey7ajupjww" path="res://resources/throw_buff.tres" id="9_2fqtj"]
 [ext_resource type="Script" uid="uid://ds1yrbusraqjm" path="res://scripts/tony/carry_visual.gd" id="9_frrmu"]
-[ext_resource type="Script" uid="uid://dp8tpt15is631" path="res://scripts/tony/box_deposit.gd" id="10_icr8t"]
 [ext_resource type="Script" uid="uid://q4c4atu8e0pg" path="res://scripts/tony/throw_component.gd" id="12_l7wjg"]
 [ext_resource type="Script" uid="uid://u0iqe0a0pwlk" path="res://scripts/tony/plant_component.gd" id="13_ecxxv"]
 [ext_resource type="Script" uid="uid://crtqv7vygo8kf" path="res://scripts/tony/pickup_component.gd" id="14_dsoo0"]
@@ -500,7 +499,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_ekprb"]
 radius = 4.98
 
-[node name="tony" type="CharacterBody2D" node_paths=PackedStringArray("movement_component", "input_manager", "animation_component", "plant_component", "pickup_component", "carry_manager", "context", "box_deposit", "shout_component", "throw_component", "buff_manager")]
+[node name="tony" type="CharacterBody2D" node_paths=PackedStringArray("movement_component", "input_manager", "animation_component", "plant_component", "pickup_component", "carry_manager", "context", "shout_component", "throw_component", "buff_manager")]
 z_index = 1
 collision_mask = 24
 script = ExtResource("1_n2y5k")
@@ -511,7 +510,6 @@ plant_component = NodePath("plant_component")
 pickup_component = NodePath("pickup_component")
 carry_manager = NodePath("carry_manager")
 context = NodePath("tony_context")
-box_deposit = NodePath("box_deposit")
 shout_component = NodePath("shout_component")
 throw_component = NodePath("throw_component")
 buff_manager = NodePath("buff_manager")
@@ -557,11 +555,6 @@ script = ExtResource("5_es3yn")
 
 [node name="shout_component" type="Node2D" parent="." node_paths=PackedStringArray("context")]
 script = ExtResource("7_py7je")
-context = NodePath("../tony_context")
-
-[node name="box_deposit" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager", "context")]
-script = ExtResource("10_icr8t")
-carry_manager = NodePath("../carry_manager")
 context = NodePath("../tony_context")
 
 [node name="throw_component" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager", "context")]
