@@ -24,6 +24,8 @@ var pickup_collision: CollisionShape2D
 @export var pickup_collision_radius: float = 4.0
 @export var radish_layer_bit: int = 6
 
+var deposited: bool = false
+
 func init(grid_coords: Vector2i, initial_holder: Node2D = null) -> void:
 	_grid_coords = grid_coords
 	holder = initial_holder

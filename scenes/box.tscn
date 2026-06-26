@@ -6,7 +6,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3inec"]
 size = Vector2(15, 11)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_ks2v0"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ks2v0"]
+size = Vector2(10, 10)
 
 [node name="box" type="StaticBody2D" node_paths=PackedStringArray("deposit_area")]
 z_index = 1
@@ -31,4 +32,5 @@ scale = Vector2(1.5, 1.5)
 monitorable = false
 
 [node name="deposit_collision" type="CollisionShape2D" parent="deposit_area"]
-shape = SubResource("CircleShape2D_ks2v0")
+position = Vector2(0.333333, 0.333333)
+shape = SubResource("RectangleShape2D_ks2v0")
