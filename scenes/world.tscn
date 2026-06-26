@@ -29,7 +29,8 @@ z_index = 0
 z_as_relative = true
 garden_manager = NodePath("../garden_manager")
 
-[node name="game_manager" parent="." node_paths=PackedStringArray("garden_manager", "radish_manager", "animal_manager") instance=ExtResource("6_qfnet")]
+[node name="game_manager" parent="." node_paths=PackedStringArray("tony", "garden_manager", "radish_manager", "animal_manager") instance=ExtResource("6_qfnet")]
+tony = NodePath("../tony")
 garden_manager = NodePath("../garden_manager")
 radish_manager = NodePath("../radish_manager")
 animal_manager = NodePath("../animal_manager")
