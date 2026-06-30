@@ -16,6 +16,8 @@ var _spawn_timer: Timer
 var _spawn_targets: Dictionary = {}
 var _active_creatures: Dictionary = {}
 
+signal spawn_chance_updated(chance: float)
+
 func _ready() -> void:
 	await _setup_context()
 	_setup_timer()
@@ -115,6 +117,17 @@ func _on_global_difficulty_changed(new_difficulty: int) -> void:
 
 func _on_spawn_chance_changed(modifier: float) -> void:
 	spawn_chance = spawn_chance * modifier
+	spawn_chance_updated.emit(spawn_chance)
+
+func increase_spawn_chance(amount: float) -> void:
+	spawn_chance = clampf(spawn_chance + amount, 0.0, 1.0)
+	spawn_chance_updated.emit(spawn_chance)
+
+func get_spawn_chance() -> float:
+	return spawn_chance
+	
+func get_difficulty() -> int:
+	return context.difficulty if context else 0
 
 func _on_animal_despawned(animal) -> void:
 	var radish = _active_creatures.find_key(animal)

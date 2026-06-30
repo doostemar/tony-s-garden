@@ -25,6 +25,7 @@ var _radish_label: Label
 var _no_radish_label: Label
 var _shop_content: VBoxContainer
 var _continue_btn: Button
+var _end_game_btn: Button
 var _item_rows: Dictionary = {}  # StatType -> { button, row, buff }
 var buff_manager: Buff_Manager
 
@@ -138,7 +139,12 @@ func _build_ui() -> void:
 	_continue_btn.focus_mode = Control.FOCUS_ALL
 	_continue_btn.pressed.connect(_on_continue_pressed)
 	vbox.add_child(_continue_btn)
-
+	_end_game_btn = Button.new()
+	_end_game_btn.text = "End Game"
+	_end_game_btn.focus_mode = Control.FOCUS_ALL
+	_end_game_btn.visible = false
+	_end_game_btn.pressed.connect(_on_end_game_pressed)
+	vbox.add_child(_end_game_btn)
 	# disable all mouse interaction – shop is keyboard-only
 	_set_mouse_filter_recursive(_panel, Control.MOUSE_FILTER_IGNORE)
 
@@ -160,6 +166,8 @@ func _rebuild_focusable_list() -> void:
 			if btn.visible:
 				_focusable_buttons.append(btn)
 	_focusable_buttons.append(_continue_btn)
+	if _end_game_btn.visible:
+		_focusable_buttons.append(_end_game_btn)
 	_focus_index = clampi(_focus_index, 0, _focusable_buttons.size() - 1)
 	_apply_focus()
 
@@ -196,23 +204,44 @@ func _on_day_started(_day_number: int) -> void:
 
 func _open_shop() -> void:
 	_opened_with_no_radishes = game_manager.get_bonus_radishes() <= 0
-
+	
 	if not _opened_with_no_radishes:
 		for stat_type in ITEM_ORDER:
 			_item_rows[stat_type]["buff"] = _find_buff_for_stat(stat_type)
-
+			
+	var final_day := game_manager and game_manager.is_on_final_day()
+	
+	if final_day:
+		_continue_btn.text = "Continue Playing"
+		_end_game_btn.visible = true
+	else:
+		_continue_btn.text = "Continue to Next Day"
+		_end_game_btn.visible = false
+		
 	_refresh()
+	
 	visible = true
 	_focus_index = 0
+	
 	_rebuild_focusable_list()
+
 
 func _close_shop() -> void:
 	visible = false
 
 func _on_continue_pressed() -> void:
 	_close_shop()
-	if game_manager and game_manager.is_awaiting_continue():
-		game_manager._confirm_continue()
+	if game_manager:
+		if game_manager.is_on_final_day():
+			game_manager.enter_endless_mode()
+		if game_manager.is_awaiting_continue():
+			game_manager._confirm_continue()
+
+func _on_end_game_pressed() -> void:
+	_close_shop()
+	if game_manager:
+		game_manager.end_game()
+
 
 # ── purchase ─────────────────────────────────────────────────────────────
 
