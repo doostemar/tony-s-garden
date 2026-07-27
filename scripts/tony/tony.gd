@@ -56,8 +56,10 @@ func _on_action_plant():
 		_throw()
 
 func _try_plant_or_pickup():
-	if not plant_component.plant():
-		pickup_component.pickup()
+	# harvest has priority: if there's a pickable radish in range, take it.
+	if pickup_component.pickup():
+		return
+	plant_component.plant()
 
 func _on_action_shout():
 	shout_component.shouting()

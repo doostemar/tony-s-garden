@@ -41,29 +41,18 @@ func init(collision_shape_radius: float) -> void:
 
 func plant() -> bool:
 	var tiles: Array[Area2D] = plant_area.get_overlapping_areas()
-	if tiles.is_empty():
-		return false
-	
-	var target := _nearest_empty_tile(tiles)
-	if target and target.has_method("make_plant"):
-		target.make_plant()
-		return true
-	return false
-
-func _nearest_empty_tile(tiles: Array) -> Node:
-	var best: Node = null
-	var best_d2 := INF
-	var origin := (parent as Node2D).global_position if parent else global_position
+	var empties: Array = []
 	for t in tiles:
-		if not t.has_method("has_radish"):
-			continue
-		if t.has_radish():
-			continue
-		var d2 := origin.distance_squared_to(t.global_position)
-		if d2 < best_d2:
-			best_d2 = d2
-			best = t
-	return best
+		if t.has_method("has_radish") and t.has_method("make_plant") and not t.has_radish():
+			empties.append(t)
+	if empties.is_empty():
+		return false
+	var origin := (parent as Node2D).global_position if parent else global_position
+	empties.sort_custom(func(a, b):
+		return origin.distance_squared_to(a.global_position) < origin.distance_squared_to(b.global_position))
+	for t in empties:
+		t.make_plant()
+	return true
 
 func _on_plant_radius_mult_changed(_new_mult: float) -> void:
 	_apply_radius_from_context()
