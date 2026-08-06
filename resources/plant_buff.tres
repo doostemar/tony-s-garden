@@ -1,12 +1,14 @@
-[gd_resource type="Resource" script_class="Buff_Definition" load_steps=2 format=3 uid="uid://d2xo4qruy5qvo"]
+[gd_resource type="Resource" script_class="Buff_Definition" load_steps=3 format=3 uid="uid://d2xo4qruy5qvo"]
 
 [ext_resource type="Script" uid="uid://56mcrlwv6exc" path="res://scripts/tony/buff_definition.gd" id="1_qsvo3"]
+[ext_resource type="Texture2D" uid="uid://4e4avdev5xlg" path="res://sprites/items/Screenshot 2026-04-01 141549.png" id="1_ryowq"]
 
 [resource]
 script = ExtResource("1_qsvo3")
 buff_id = &"plant_radius"
 display_name = "GREEN FINGERS"
 flavor_text = "Tony feels sharp!"
+icon = ExtResource("1_ryowq")
 stat_type = 3
 modifier_per_tier = 2.35
 max_tier = 3

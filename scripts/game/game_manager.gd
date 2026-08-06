@@ -71,12 +71,8 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if awaiting_continue and event.is_action_pressed("ui_accept"):
-
-		var shop := get_tree().get_root().find_child("ShopUI", true, false)
-		if shop and shop.visible:
-			return
 		get_viewport().set_input_as_handled()
-		_confirm_continue()
+		confirm_continue()
 
 # --- setup --- #
 func _connect_signals() -> void:
@@ -201,11 +197,15 @@ func _set_awaiting_continue(value: bool) -> void:
 	awaiting_continue = value
 	awaiting_continue_changed.emit(awaiting_continue)
 
-func _confirm_continue() -> void:
+func confirm_continue() -> void:
 	_set_awaiting_continue(false)
-	
+
 	if not advance_to_next_day():
 		print("GameManager: All days completed!")
+
+func get_quota_target() -> int:
+	var config := _get_current_config()
+	return config.quota if config else 0
 
 func advance_to_next_day() -> bool:
 	current_day_index += 1

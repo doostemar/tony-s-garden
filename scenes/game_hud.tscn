@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxmuw1yhmo8i4"]
+
+[ext_resource type="Script" uid="uid://cygy3q2bv0ovs" path="res://scripts/game/game_hud.gd" id="1_q4g6c"]
+
+[node name="game_hud" type="CanvasLayer" node_paths=PackedStringArray("day_label", "timer_label", "quota_label", "bonus_label", "difficulty_label", "spawn_chance_label", "pause_button", "buff_container")]
+script = ExtResource("1_q4g6c")
+day_label = NodePath("hud_root/day_label")
+timer_label = NodePath("hud_root/timer_label")
+quota_label = NodePath("hud_root/quota_label")
+bonus_label = NodePath("hud_root/bonus_label")
+difficulty_label = NodePath("hud_root/difficulty_label")
+spawn_chance_label = NodePath("hud_root/spawn_chance_label")
+pause_button = NodePath("hud_root/pause_button")
+buff_container = NodePath("hud_root/buff_container")
+
+[node name="hud_root" type="Control" parent="."]
+layout_mode = 3
+anchor_right = 0.367
+anchor_bottom = 0.563
+offset_left = 271.0
+offset_top = 10.0
+offset_right = 271.216
+offset_bottom = 10.176
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="day_label" type="Label" parent="hud_root"]
+offset_left = 75.0
+offset_top = 30.0
+offset_right = 115.0
+offset_bottom = 53.0
+text = "day"
+
+[node name="timer_label" type="Label" parent="hud_root"]
+offset_left = 76.0
+offset_top = 53.0
+offset_right = 119.0
+offset_bottom = 76.0
+text = "timer"
+
+[node name="bonus_label" type="Label" parent="hud_root"]
+offset_left = 78.0
+offset_top = 72.0
+offset_right = 126.0
+offset_bottom = 95.0
+text = "bonus"
+
+[node name="pause_button" type="CheckButton" parent="hud_root"]
+layout_mode = 0
+offset_left = -57.0
+offset_top = -4.0
+offset_right = 38.0
+offset_bottom = 27.0
+focus_mode = 0
+text = "pause
+"
+
+[node name="difficulty_label" type="Label" parent="hud_root"]
+offset_left = 78.0
+offset_top = 92.0
+offset_right = 146.0
+offset_bottom = 115.0
+text = "difficulty"
+
+[node name="spawn_chance_label" type="Label" parent="hud_root"]
+offset_left = 75.0
+offset_top = 111.0
+offset_right = 187.0
+offset_bottom = 134.0
+text = "spawn_chance"
+
+[node name="buff_header" type="Label" parent="hud_root"]
+offset_left = 79.0
+offset_top = 137.0
+offset_right = 123.0
+offset_bottom = 160.0
+text = "buffs:"
+
+[node name="quota_label" type="Label" parent="hud_root"]
+layout_mode = 0
+offset_left = 74.0
+offset_top = 6.0
+offset_right = 120.0
+offset_bottom = 29.0
+text = "quota"
+
+[node name="buff_container" type="VBoxContainer" parent="hud_root"]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 207.0
+offset_right = 160.0
+offset_bottom = 320.0

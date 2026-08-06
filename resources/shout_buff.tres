@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="Buff_Definition" load_steps=2 format=3 uid="uid://frff0qeyr5t1"]
+[gd_resource type="Resource" script_class="Buff_Definition" load_steps=3 format=3 uid="uid://frff0qeyr5t1"]
 
+[ext_resource type="Texture2D" uid="uid://cj3g1lkw6d73n" path="res://sprites/items/Screenshot 2026-04-01 141601.png" id="1_qab52"]
 [ext_resource type="Script" uid="uid://56mcrlwv6exc" path="res://scripts/tony/buff_definition.gd" id="1_x6gnj"]
 
 [resource]
@@ -7,6 +8,7 @@ script = ExtResource("1_x6gnj")
 buff_id = &"shout_radius"
 display_name = "STRONG LUNGS"
 flavor_text = "Tony feels like he could sing!"
+icon = ExtResource("1_qab52")
 stat_type = 1
 modifier_per_tier = 0.35
 max_tier = 3

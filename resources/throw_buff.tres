@@ -1,12 +1,14 @@
-[gd_resource type="Resource" script_class="Buff_Definition" load_steps=2 format=3 uid="uid://cixey7ajupjww"]
+[gd_resource type="Resource" script_class="Buff_Definition" load_steps=3 format=3 uid="uid://cixey7ajupjww"]
 
 [ext_resource type="Script" uid="uid://56mcrlwv6exc" path="res://scripts/tony/buff_definition.gd" id="1_exevx"]
+[ext_resource type="Texture2D" uid="uid://bisybjc1m1cyb" path="res://sprites/items/Screenshot 2026-04-01 141618.png" id="1_twr2h"]
 
 [resource]
 script = ExtResource("1_exevx")
 buff_id = &"throw_speed"
 display_name = "BIG ARM"
 flavor_text = "Tony feels like an Olympian!"
+icon = ExtResource("1_twr2h")
 stat_type = 2
 modifier_per_tier = 0.35
 max_tier = 3
