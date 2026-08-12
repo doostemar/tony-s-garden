@@ -26,6 +26,7 @@ end_game_button = NodePath("shop_panel/end_button")
 
 [node name="shop_panel" type="Panel" parent="."]
 anchors_preset = -1
+anchor_left = -0.0746528
 anchor_right = -0.0746528
 anchor_bottom = 0.109568
 offset_left = 74.0
@@ -171,6 +172,7 @@ offset_right = 292.0
 offset_bottom = 265.0
 
 [node name="continue_button" type="Button" parent="shop_panel"]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 261.0
 offset_right = 119.0
@@ -181,6 +183,7 @@ text = "continue"
 
 [node name="end_button" type="Button" parent="shop_panel"]
 visible = false
+layout_mode = 0
 offset_left = 171.0
 offset_top = 262.0
 offset_right = 295.0

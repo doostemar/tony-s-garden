@@ -243,7 +243,7 @@ func _refresh_info() -> void:
 	if not info_label or not game_manager:
 		return
 	
-	var config := game_manager._get_current_config()
+	var config = game_manager.get_current_config()
 	var lines: Array[String] = []
 	
 	var day_num := game_manager.get_current_day_number()
@@ -257,7 +257,7 @@ func _refresh_info() -> void:
 	
 	if config:
 		var progress := game_manager.get_quota_progress()
-		var quota_target := config.quota
+		var quota_target = config.quota
 		var quota_color := "green" if progress >= quota_target else "white"
 		lines.append("[color=yellow]Quota:[/color] [color=%s]%d / %d[/color]" % [quota_color, progress, quota_target])
 		lines.append("[color=yellow]Difficulty:[/color] %d" % config.difficulty)
@@ -287,7 +287,7 @@ func _refresh_day_display() -> void:
 func _refresh_quota_display() -> void:
 	if not quota_input or not game_manager:
 		return
-	var config := game_manager._get_current_config()
+	var config = game_manager.get_current_config()
 	if config:
 		quota_input.set_value_no_signal(config.quota)
 

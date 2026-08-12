@@ -25,6 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="day_label" type="Label" parent="hud_root"]
+layout_mode = 0
 offset_left = 75.0
 offset_top = 30.0
 offset_right = 115.0
@@ -32,6 +33,7 @@ offset_bottom = 53.0
 text = "day"
 
 [node name="timer_label" type="Label" parent="hud_root"]
+layout_mode = 0
 offset_left = 76.0
 offset_top = 53.0
 offset_right = 119.0
@@ -39,6 +41,7 @@ offset_bottom = 76.0
 text = "timer"
 
 [node name="bonus_label" type="Label" parent="hud_root"]
+layout_mode = 0
 offset_left = 78.0
 offset_top = 72.0
 offset_right = 126.0
@@ -56,6 +59,7 @@ text = "pause
 "
 
 [node name="difficulty_label" type="Label" parent="hud_root"]
+layout_mode = 0
 offset_left = 78.0
 offset_top = 92.0
 offset_right = 146.0
@@ -63,6 +67,7 @@ offset_bottom = 115.0
 text = "difficulty"
 
 [node name="spawn_chance_label" type="Label" parent="hud_root"]
+layout_mode = 0
 offset_left = 75.0
 offset_top = 111.0
 offset_right = 187.0
@@ -70,6 +75,7 @@ offset_bottom = 134.0
 text = "spawn_chance"
 
 [node name="buff_header" type="Label" parent="hud_root"]
+layout_mode = 0
 offset_left = 79.0
 offset_top = 137.0
 offset_right = 123.0

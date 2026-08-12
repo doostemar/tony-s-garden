@@ -1,6 +1,55 @@
-[gd_scene load_steps=2 format=3 uid="uid://dlc14tyl5dcuf"]
+[gd_scene load_steps=10 format=3 uid="uid://dlc14tyl5dcuf"]
 
 [ext_resource type="Script" uid="uid://srq0o057qqew" path="res://scripts/game/game_manager.gd" id="1_glms7"]
+[ext_resource type="Script" uid="uid://cf5a8x4277uga" path="res://scripts/game/day_schedule.gd" id="2_glms7"]
+[ext_resource type="Script" uid="uid://cbrb3x1lubwum" path="res://scripts/game/day_config.gd" id="3_eaq8r"]
+[ext_resource type="Script" uid="uid://d4e4ku18j8bm6" path="res://scripts/game/day_timer.gd" id="3_udu3i"]
+[ext_resource type="Script" uid="uid://d2n45qqporqkx" path="res://scripts/game/day_world_resetter.gd" id="6_q8mjp"]
+[ext_resource type="Script" uid="uid://qk6i4q0jgy2c" path="res://scripts/game/game_progress.gd" id="6_ternb"]
 
-[node name="game_manager" type="Node"]
+[sub_resource type="Resource" id="Resource_eaq8r"]
+script = ExtResource("3_eaq8r")
+day_number = 1
+quota = 1
+time_limit = 10.0
+garden_side_length = 9
+difficulty = 0
+metadata/_custom_type_script = "uid://cbrb3x1lubwum"
+
+[sub_resource type="Resource" id="Resource_ternb"]
+script = ExtResource("3_eaq8r")
+day_number = 2
+quota = 2
+time_limit = 12.0
+garden_side_length = 11
+difficulty = 1
+metadata/_custom_type_script = "uid://cbrb3x1lubwum"
+
+[sub_resource type="Resource" id="Resource_q8mjp"]
+script = ExtResource("3_eaq8r")
+day_number = 3
+quota = 3
+time_limit = 12.0
+garden_side_length = 13
+difficulty = 1
+metadata/_custom_type_script = "uid://cbrb3x1lubwum"
+
+[node name="game_manager" type="Node" node_paths=PackedStringArray("_schedule", "_timer", "_progress", "_world_resetter")]
 script = ExtResource("1_glms7")
+_schedule = NodePath("day_schedule")
+_timer = NodePath("day_timer")
+_progress = NodePath("game_progress")
+_world_resetter = NodePath("day_world_resetter")
+
+[node name="day_schedule" type="Node" parent="."]
+script = ExtResource("2_glms7")
+day_configs = Array[ExtResource("3_eaq8r")]([SubResource("Resource_eaq8r"), SubResource("Resource_ternb"), SubResource("Resource_q8mjp")])
+
+[node name="day_timer" type="Node" parent="."]
+script = ExtResource("3_udu3i")
+
+[node name="game_progress" type="Node" parent="."]
+script = ExtResource("6_ternb")
+
+[node name="day_world_resetter" type="Node" parent="."]
+script = ExtResource("6_q8mjp")
