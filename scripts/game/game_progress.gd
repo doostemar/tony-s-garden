@@ -1,3 +1,4 @@
+# game_progress.gd
 class_name GameProgress
 extends Node
 

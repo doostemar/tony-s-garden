@@ -1,3 +1,4 @@
+# day_world_resetter.gd
 class_name DayWorldResetter
 extends Node
 

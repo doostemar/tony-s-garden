@@ -1,3 +1,4 @@
+# day_timer.gd
 class_name DayTimer
 extends Node
 

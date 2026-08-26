@@ -1,3 +1,4 @@
+# day_schedule.gd
 class_name DaySchedule
 extends Node
 
