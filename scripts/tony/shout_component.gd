@@ -1,11 +1,12 @@
 # shout_component.gd
+
 class_name Shout_Component
 extends Node2D
 
 @export var shout_layer_bit: int = 5
 @export var collision_offset: Vector2 = Vector2(0, 0)
-
 @export var context: Tony_Context
+@export var shout_visual: Shout_Visual
 
 var _shout_area: Area2D
 var _shout_collision: CollisionShape2D
@@ -19,6 +20,7 @@ func init(hitbox_radius: float, hitbox_duration: float) -> void:
 
 	_base_hitbox_radius = hitbox_radius
 	_hitbox_duration = hitbox_duration
+
 	_setup_timer()
 	_setup_hitbox()
 	_apply_radius_from_context()
@@ -28,16 +30,20 @@ func _setup_hitbox() -> void:
 	add_child(_shout_area)
 
 	_shout_collision = CollisionShape2D.new()
+
 	var shape := CircleShape2D.new()
 	shape.radius = _base_hitbox_radius
+
 	_shout_collision.shape = shape
 	_shout_collision.position = collision_offset
+
 	_shout_area.add_child(_shout_collision)
 
 	_turn_off_hitbox()
 
 	_shout_area.collision_layer = 1 << 0
 	_shout_area.collision_mask = 1 << shout_layer_bit
+
 	_shout_area.body_entered.connect(_on_body_entered)
 
 func _setup_timer() -> void:
@@ -45,6 +51,7 @@ func _setup_timer() -> void:
 	_hitbox_timer.one_shot = true
 	_hitbox_timer.wait_time = _hitbox_duration
 	_hitbox_timer.timeout.connect(_on_hitbox_timeout)
+
 	add_child(_hitbox_timer)
 
 func _on_shout_radius_changed(_new_mult: float) -> void:
@@ -53,19 +60,42 @@ func _on_shout_radius_changed(_new_mult: float) -> void:
 func _apply_radius_from_context() -> void:
 	if _shout_collision == null:
 		return
+
 	var shape := _shout_collision.shape as CircleShape2D
+
 	if shape == null:
 		return
 
 	var mult := 1.0
+
 	if context:
 		mult = context.shout_radius_mult
 
 	shape.radius = _base_hitbox_radius * mult
 
+	_sync_visual() 
+
+func _sync_visual() -> void:
+	if shout_visual == null or _shout_collision == null:
+		return
+
+	var shape := _shout_collision.shape as CircleShape2D
+
+	if shape == null:
+		return
+
+	shout_visual.sync_shape(
+		shape.radius,
+		_shout_collision.position
+	)
+
 func _on_hitbox_timeout() -> void:
 	print("done shouting, thanks")
+
 	_turn_off_hitbox()
+
+	if shout_visual: 
+		shout_visual.stop()
 
 func _turn_off_hitbox() -> void:
 	_shout_area.monitoring = false
@@ -79,8 +109,15 @@ func shouting() -> bool:
 	_shout_area.monitoring = true
 	_shout_area.monitorable = true
 	_shout_collision.debug_color = Color(0.9, 0, 0, .7)
+
 	_hitbox_timer.start()
+
+	if shout_visual: 
+		_sync_visual()
+		shout_visual.play(_hitbox_timer)
+
 	print("shouting")
+
 	return true
 
 func _on_body_entered(body: Node2D) -> void:
@@ -89,4 +126,5 @@ func _on_body_entered(body: Node2D) -> void:
 		body.exit()
 	else:
 		print("no bodies found")
+
 	return

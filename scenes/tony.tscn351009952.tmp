@@ -501,16 +501,13 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_ekprb"]
 radius = 4.98
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gpb4h"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mn251"]
 shader = ExtResource("16_gpb4h")
 shader_parameter/radius = 25.0
-shader_parameter/quad_size = 60.0
-shader_parameter/progress = 0.0
-shader_parameter/active = false
-shader_parameter/show_static_outline = false
-shader_parameter/fill_color = Color(0.915292, 0.81511, 1, 0.3)
-shader_parameter/ring_color = Color(0.566968, 0.0445707, 0.624797, 0.9)
-shader_parameter/outline_color = Color(1, 1, 1, 0.35)
+shader_parameter/quad_size = 54.0
+shader_parameter/progress = 0.039
+shader_parameter/fill_color = Color(0.957466, 0.746456, 0.958638, 0.25)
+shader_parameter/ring_color = Color(0.93322, 0.502117, 0.864034, 0.9)
 shader_parameter/ring_thickness = 2.0
 shader_parameter/edge_softness = 1.0
 
@@ -528,11 +525,6 @@ context = NodePath("tony_context")
 shout_component = NodePath("shout_component")
 throw_component = NodePath("throw_component")
 buff_manager = NodePath("buff_manager")
-movement_speed = null
-planting_hitbox_size = null
-pickup_hitbox_size = null
-shout_hitbox_size = null
-shout_duration = null
 
 [node name="tony_context" type="Node" parent="."]
 script = ExtResource("2_361jj")
@@ -573,14 +565,11 @@ input_manager = NodePath("../input_manager")
 [node name="input_manager" type="Node2D" parent="."]
 script = ExtResource("5_es3yn")
 
-[node name="shout_component" type="Node2D" parent="." node_paths=PackedStringArray("context", "shout_visual")]
-show_behind_parent = true
+[node name="shout_component" type="Node2D" parent="."]
 script = ExtResource("7_py7je")
-context = NodePath("../tony_context")
-shout_visual = NodePath("shout_visual")
 
 [node name="shout_visual" type="Sprite2D" parent="shout_component"]
-material = SubResource("ShaderMaterial_gpb4h")
+material = SubResource("ShaderMaterial_mn251")
 script = ExtResource("16_jyouf")
 
 [node name="throw_component" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager", "context")]
