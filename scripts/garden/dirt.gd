@@ -1,3 +1,4 @@
+# dirt.gd
 class_name Dirt
 extends Area2D
 
