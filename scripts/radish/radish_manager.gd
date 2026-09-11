@@ -1,3 +1,4 @@
+# radish_manager.gd
 class_name Radish_Manager
 extends Node2D
 
