@@ -1,8 +1,9 @@
-[gd_scene load_steps=23 format=3 uid="uid://bxotgarkfqjxm"]
+[gd_scene load_steps=24 format=3 uid="uid://bxotgarkfqjxm"]
 
 [ext_resource type="Script" uid="uid://bqjetdbt6r1mv" path="res://scripts/animals/mole.gd" id="1_0o2lx"]
 [ext_resource type="Texture2D" uid="uid://d0wqvn1fodmnr" path="res://sprites/animals/mole-emerge2.png" id="1_4qimr"]
 [ext_resource type="Script" uid="uid://csay1e53tpcpp" path="res://scripts/animals/mole_animations.gd" id="3_kln4g"]
+[ext_resource type="Script" uid="uid://dq8fthk80el2h" path="res://scripts/animals/adjacent_grass_finder.gd" id="4_7mr06"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kln4g"]
 size = Vector2(8, 3)
@@ -240,12 +241,13 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="mole" type="StaticBody2D" node_paths=PackedStringArray("animation_component", "collision_shape")]
+[node name="mole" type="StaticBody2D" node_paths=PackedStringArray("animation_component", "collision_shape", "adjacent_grass_finder")]
 collision_layer = 16
 collision_mask = 33
 script = ExtResource("1_0o2lx")
 animation_component = NodePath("AnimatedSprite2D")
 collision_shape = NodePath("CollisionShape2D")
+adjacent_grass_finder = NodePath("spawn_finder")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 1
@@ -258,3 +260,6 @@ texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_7mr06")
 animation = &"shouted_exit"
 script = ExtResource("3_kln4g")
+
+[node name="spawn_finder" type="Node" parent="."]
+script = ExtResource("4_7mr06")
