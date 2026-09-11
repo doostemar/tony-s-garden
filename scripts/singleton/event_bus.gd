@@ -21,7 +21,7 @@ signal grid_ready()
 # animals
 signal spawn_requested( spawn_pos: Vector2, radish_state: int )
 signal animal_spawned()
-signal animal_despawned()
+signal animal_despawned( animal )
 signal animal_stealing( animal )
 
 # score
