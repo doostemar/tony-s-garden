@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://cdmfucutv33j1"]
+
+[ext_resource type="Texture2D" uid="uid://dwdgko7smyh87" path="res://sprites/animals/rabbit.png" id="1_0rrc3"]
+[ext_resource type="Script" uid="uid://vxceptuethn" path="res://scripts/animals/rabbit.gd" id="1_haj5u"]
+[ext_resource type="Script" uid="uid://cuxyj0ednx1gy" path="res://scripts/animals/garden_bounds.gd" id="2_dxh4p"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dxh4p"]
+radius = 4.0
+
+[node name="rabbit" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "garden_bounds")]
+z_index = 1
+script = ExtResource("1_haj5u")
+sprite = NodePath("Sprite2D")
+collision_shape = NodePath("CollisionShape2D")
+garden_bounds = NodePath("garden_bounds")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_dxh4p")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 5
+position = Vector2(0, -1)
+texture = ExtResource("1_0rrc3")
+
+[node name="garden_bounds" type="Node" parent="."]
+script = ExtResource("2_dxh4p")

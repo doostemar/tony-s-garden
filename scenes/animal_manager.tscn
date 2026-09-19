@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b1aef0h0nie24"]
+[gd_scene load_steps=5 format=3 uid="uid://b1aef0h0nie24"]
 
 [ext_resource type="Script" uid="uid://dnsq6omdk15v5" path="res://scripts/animals/animal_manager.gd" id="1_pjtaj"]
 [ext_resource type="Script" uid="uid://csnw2iu2hl2yn" path="res://scripts/animals/animal_context.gd" id="2_isr3r"]
 [ext_resource type="PackedScene" uid="uid://bxotgarkfqjxm" path="res://scenes/mole.tscn" id="2_vvsfx"]
+[ext_resource type="PackedScene" uid="uid://cdmfucutv33j1" path="res://scenes/rabbit.tscn" id="3_vvsfx"]
 
 [node name="animal_manager" type="Node2D" node_paths=PackedStringArray("context")]
 z_index = 1
@@ -10,7 +11,7 @@ z_as_relative = false
 y_sort_enabled = true
 script = ExtResource("1_pjtaj")
 context = NodePath("animal_context")
-animal_scenes = Array[PackedScene]([ExtResource("2_vvsfx")])
+animal_scenes = Array[PackedScene]([ExtResource("2_vvsfx"), ExtResource("3_vvsfx")])
 
 [node name="animal_context" type="Node" parent="."]
 script = ExtResource("2_isr3r")

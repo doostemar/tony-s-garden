@@ -5,7 +5,7 @@ extends Node2D
 @export var radish_animations: AnimatedSprite2D
 
 var growing: bool = false
-var radish_growth_rate: float = 50.0
+var radish_growth_rate: float = 20.0
 var radish_growth_timer: float = 0.0 
 var radish_state_change_timer: float = 100.0
 
@@ -105,6 +105,15 @@ func change_state(new_state: RadishState) -> void:
 		RadishState.LANDED:
 			radish_animations.play("landed")
 
+## pauses growth while preserving radish_growth_timer (e.g. while being chewed)
+func pause_growth() -> void:
+	growing = false
+	
+## resumes growth from preserved progress, unless already fully grown
+func resume_growth() -> void:
+	if current_state < RadishState.ADULT:
+		growing = true
+		
 func _physics_process(delta: float) -> void:
 	if holder and is_instance_valid(holder):
 		global_position = holder.global_position + _follow_offset
