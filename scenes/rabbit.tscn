@@ -1,18 +1,26 @@
-[gd_scene load_steps=5 format=3 uid="uid://cdmfucutv33j1"]
+[gd_scene load_steps=11 format=3 uid="uid://cdmfucutv33j1"]
 
 [ext_resource type="Texture2D" uid="uid://dwdgko7smyh87" path="res://sprites/animals/rabbit.png" id="1_0rrc3"]
-[ext_resource type="Script" uid="uid://vxceptuethn" path="res://scripts/animals/rabbit.gd" id="1_haj5u"]
+[ext_resource type="Script" uid="uid://vxceptuethn" path="res://scripts/animals/rabbit/rabbit.gd" id="1_haj5u"]
 [ext_resource type="Script" uid="uid://cuxyj0ednx1gy" path="res://scripts/animals/garden_bounds.gd" id="2_dxh4p"]
+[ext_resource type="Script" uid="uid://vfhhs4vme5ht" path="res://scripts/animals/rabbit/rabbit_targeting.gd" id="4_isyl8"]
+[ext_resource type="Script" uid="uid://16d6rlt1r1i4" path="res://scripts/animals/rabbit/rabbit_state_machine.gd" id="5_3f1j7"]
+[ext_resource type="Script" uid="uid://bh2uy0t65k5tf" path="res://scripts/animals/rabbit/rabbit_chase_state.gd" id="6_q4ioq"]
+[ext_resource type="Script" uid="uid://nymwibyqeymr" path="res://scripts/animals/rabbit/rabbit_chew_state.gd" id="7_fsuuw"]
+[ext_resource type="Script" uid="uid://clrnjiy6dheja" path="res://scripts/animals/rabbit/rabbit_idle_state.gd" id="8_m3cw8"]
+[ext_resource type="Script" uid="uid://c5pkviriow8e4" path="res://scripts/animals/rabbit/rabbit_flee_state.gd" id="9_5l0cu"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dxh4p"]
 radius = 4.0
 
-[node name="rabbit" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "garden_bounds")]
+[node name="rabbit" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "garden_bounds", "targeting", "state_machine")]
 z_index = 1
 script = ExtResource("1_haj5u")
 sprite = NodePath("Sprite2D")
 collision_shape = NodePath("CollisionShape2D")
 garden_bounds = NodePath("garden_bounds")
+targeting = NodePath("targeting")
+state_machine = NodePath("state_machine")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_dxh4p")
@@ -24,3 +32,26 @@ texture = ExtResource("1_0rrc3")
 
 [node name="garden_bounds" type="Node" parent="."]
 script = ExtResource("2_dxh4p")
+
+[node name="targeting" type="Node" parent="."]
+script = ExtResource("4_isyl8")
+
+[node name="state_machine" type="Node" parent="."]
+script = ExtResource("5_3f1j7")
+
+[node name="chase" type="Node" parent="state_machine" node_paths=PackedStringArray("chew_state", "idle_state")]
+script = ExtResource("6_q4ioq")
+chew_state = NodePath("../chew")
+idle_state = NodePath("../idle")
+
+[node name="chew" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state", "idle_state")]
+script = ExtResource("7_fsuuw")
+chase_state = NodePath("../chase")
+idle_state = NodePath("../idle")
+
+[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("chase_state")]
+script = ExtResource("8_m3cw8")
+chase_state = NodePath("../chase")
+
+[node name="flee" type="Node" parent="state_machine"]
+script = ExtResource("9_5l0cu")
