@@ -1,3 +1,4 @@
+# rabbit_chew_state.gd
 class_name Rabbit_Chew_State
 extends Rabbit_State
 
@@ -32,9 +33,7 @@ func exit() -> void:
 	_chew_timer = 0.0
 
 
-func process_physics(
-	delta: float
-) -> Rabbit_State:
+func process_physics(delta: float) -> Rabbit_State:
 	if not targeting.is_target_valid():
 		_abandon_target()
 
@@ -76,17 +75,9 @@ func _eat_target() -> void:
 	_chewed_radish = null
 	_chew_timer = 0.0
 
-	event_bus.emit_signal(
-		"animal_stealing",
-		rabbit
-	)
+	event_bus.emit_signal("animal_stealing", rabbit)
 
 	if targeting.context:
-		targeting.context.forget_radish(
-			radish
-		)
+		targeting.context.forget_radish(radish)
 
-	event_bus.emit_signal(
-		"radish_destroy_requested",
-		radish
-	)
+	event_bus.emit_signal("radish_destroy_requested", radish)

@@ -92,6 +92,7 @@ func change_state(new_state: RadishState) -> void:
 			radish_animations.play("seed")
 			event_bus.radish_planted.emit(self, global_position, _grid_coords)
 		RadishState.SPROUT:
+			radish_state_change_timer = 600
 			radish_animations.z_index = 1
 			radish_animations.z_as_relative = true
 			radish_animations.play("sprout")

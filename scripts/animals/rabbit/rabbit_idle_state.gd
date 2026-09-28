@@ -1,3 +1,4 @@
+# rabbit_idle_state.gd
 class_name Rabbit_Idle_State
 extends Rabbit_State
 
@@ -25,28 +26,18 @@ func enter() -> void:
 
 	_anchor = rabbit.global_position
 
-	if (
-		rabbit.garden_bounds
-		and rabbit.garden_bounds.is_valid()
-	):
-		_anchor = (
-			rabbit.garden_bounds.clamp_inside(
-				rabbit.global_position,
-				idle_bounds_inset
-			)
+	if rabbit.garden_bounds and rabbit.garden_bounds.is_valid():
+		_anchor = rabbit.garden_bounds.clamp_inside(
+			rabbit.global_position,
+			idle_bounds_inset
 		)
 
 	_has_destination = false
 
-	_pause_timer = randf_range(
-		idle_pause_min,
-		idle_pause_max
-	)
+	_pause_timer = randf_range(idle_pause_min, idle_pause_max)
 
 
-func process_physics(
-	delta: float
-) -> Rabbit_State:
+func process_physics(delta: float) -> Rabbit_State:
 	# this also acts as the fallback scan if the
 	# radish_sprouted signal isn't what claimed
 	# the target
@@ -67,42 +58,25 @@ func process_physics(
 	if not _has_destination:
 		_pick_destination()
 
-	var to_destination := (
-		_destination
-		- rabbit.global_position
-	)
+	var to_destination := _destination - rabbit.global_position
 
-	if (
-		to_destination.length()
-		<= idle_arrival_distance
-	):
+	if to_destination.length() <= idle_arrival_distance:
 		_has_destination = false
 
-		_pause_timer = randf_range(
-			idle_pause_min,
-			idle_pause_max
-		)
+		_pause_timer = randf_range(idle_pause_min, idle_pause_max)
 
 		rabbit.velocity = Vector2.ZERO
 		return null
 
-	rabbit.velocity = (
-		to_destination.normalized()
-		* idle_speed
-	)
+	rabbit.velocity = to_destination.normalized() * idle_speed
 
 	rabbit.move_and_slide()
 
 	return null
 
 
-func try_claim_sprout(
-	radish: Radish
-) -> bool:
-	if not targeting.is_sprout_available(
-		radish,
-		targeting.get_other_rabbits()
-	):
+func try_claim_sprout(radish: Radish) -> bool:
+	if not targeting.is_sprout_available(radish, targeting.get_other_rabbits()):
 		return false
 
 	targeting.set_target(radish)
@@ -110,29 +84,17 @@ func try_claim_sprout(
 
 
 func _pick_destination() -> void:
-	var offset := (
-		Vector2.from_angle(
-			randf() * TAU
-		)
-		* randf_range(
-			idle_wander_radius * 0.25,
-			idle_wander_radius
-		)
+	var offset := Vector2.from_angle(randf() * TAU) * randf_range(
+		idle_wander_radius * 0.25,
+		idle_wander_radius
 	)
 
-	var destination := (
-		_anchor + offset
-	)
+	var destination := _anchor + offset
 
-	if (
-		rabbit.garden_bounds
-		and rabbit.garden_bounds.is_valid()
-	):
-		destination = (
-			rabbit.garden_bounds.clamp_inside(
-				destination,
-				idle_bounds_inset
-			)
+	if rabbit.garden_bounds and rabbit.garden_bounds.is_valid():
+		destination = rabbit.garden_bounds.clamp_inside(
+			destination,
+			idle_bounds_inset
 		)
 
 	_destination = destination

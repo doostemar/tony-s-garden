@@ -1,3 +1,4 @@
+# rabbit_chase_state.gd
 class_name Rabbit_Chase_State
 extends Rabbit_State
 
@@ -27,9 +28,7 @@ func enter() -> void:
 	_deviation_angle = 0.0
 
 
-func process_physics(
-	delta: float
-) -> Rabbit_State:
+func process_physics(delta: float) -> Rabbit_State:
 	if not targeting.is_target_valid():
 		targeting.release_target()
 
@@ -39,59 +38,35 @@ func process_physics(
 		return idle_state
 
 	var target := targeting.get_target()
-
-	var to_target := (
-		target.global_position
-		- rabbit.global_position
-	)
-
+	var to_target := target.global_position - rabbit.global_position
 	var distance := to_target.length()
 
 	if distance <= chew_distance:
 		return chew_state
 
-	_update_deviation(
-		delta,
-		distance
-	)
+	_update_deviation(delta, distance)
 
-	var direction := (
-		to_target.normalized()
-		.rotated(_deviation_angle)
-	)
+	var direction := to_target.normalized().rotated(_deviation_angle)
 
-	rabbit.velocity = (
-		direction
-		* chase_speed
-	)
+	rabbit.velocity = direction * chase_speed
 
 	rabbit.move_and_slide()
 
 	return null
 
 
-func _update_deviation(
-	delta: float,
-	distance: float
-) -> void:
+func _update_deviation(delta: float, distance: float) -> void:
 	_deviation_timer -= delta
 
 	if _deviation_timer <= 0.0:
 		_deviation_timer = deviation_interval
 
 		_deviation_angle = deg_to_rad(
-			randf_range(
-				-deviation_max_degrees,
-				deviation_max_degrees
-			)
+			randf_range(-deviation_max_degrees, deviation_max_degrees)
 		)
 
 	var fade := clampf(
-		(distance - chew_distance)
-		/ maxf(
-			deviation_fade_distance,
-			0.001
-		),
+		(distance - chew_distance) / maxf(deviation_fade_distance, 0.001),
 		0.0,
 		1.0
 	)

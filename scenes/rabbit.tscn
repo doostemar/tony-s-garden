@@ -13,7 +13,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_dxh4p"]
 radius = 4.0
 
-[node name="rabbit" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "garden_bounds", "targeting", "state_machine")]
+[node name="rabbit" type="CharacterBody2D" node_paths=PackedStringArray("sprite", "collision_shape", "garden_bounds", "targeting", "state_machine", "chase_state", "idle_state", "flee_state")]
 z_index = 1
 script = ExtResource("1_haj5u")
 sprite = NodePath("Sprite2D")
@@ -21,6 +21,9 @@ collision_shape = NodePath("CollisionShape2D")
 garden_bounds = NodePath("garden_bounds")
 targeting = NodePath("targeting")
 state_machine = NodePath("state_machine")
+chase_state = NodePath("state_machine/chase")
+idle_state = NodePath("state_machine/idle")
+flee_state = NodePath("state_machine/flee")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_dxh4p")
