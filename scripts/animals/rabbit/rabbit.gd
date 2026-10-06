@@ -165,7 +165,7 @@ func exit() -> void:
 	if state_machine.is_in_state(flee_state):
 		return
 
-	flee_state.enter()
+	state_machine.change_state(flee_state)
 
 
 # -------------------------------------------------

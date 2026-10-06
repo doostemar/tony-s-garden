@@ -23,6 +23,7 @@ offset_right = 271.216
 offset_bottom = 10.176
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="day_label" type="Label" parent="hud_root"]
 layout_mode = 0
