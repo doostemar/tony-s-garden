@@ -6,29 +6,34 @@ extends Node2D
 
 var growing: bool = false
 var radish_growth_rate: float = 20.0
-var radish_growth_timer: float = 0.0 
+var radish_growth_timer: float = 0.0
 var radish_state_change_timer: float = 100.0
 
 enum RadishState { SEED, SPROUT, ADULT, AIRBORNE, LANDED }
-var current_state: RadishState = RadishState.SEED
 
+var current_state: RadishState = RadishState.SEED
 var _grid_coords: Vector2i = Vector2i.ZERO
+var _radish_manager: Radish_Manager
 
 # --- ownership --- #
+
 var holder: Node2D = null
 var _follow_offset: Vector2 = Vector2.ZERO
 
 # --- pickup collision --- #
+
 var pickup_area: Area2D
 var pickup_collision: CollisionShape2D
+
 @export var pickup_collision_radius: float = 4.0
 @export var radish_layer_bit: int = 6
 
 var deposited: bool = false
 
-func init(grid_coords: Vector2i, initial_holder: Node2D = null) -> void:
+func init(grid_coords: Vector2i, initial_holder: Node2D = null, radish_manager: Radish_Manager = null) -> void:
 	_grid_coords = grid_coords
 	holder = initial_holder
+	_radish_manager = radish_manager
 
 	radish_animations.position = Vector2.ZERO
 	radish_animations.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -45,6 +50,7 @@ func _setup_pickup_collision() -> void:
 	add_child(pickup_area)
 
 	pickup_collision = CollisionShape2D.new()
+
 	var shape := CircleShape2D.new()
 	shape.radius = pickup_collision_radius
 	pickup_collision.shape = shape
@@ -91,40 +97,50 @@ func change_state(new_state: RadishState) -> void:
 		RadishState.SEED:
 			radish_animations.play("seed")
 			event_bus.radish_planted.emit(self, global_position, _grid_coords)
+
 		RadishState.SPROUT:
 			radish_state_change_timer = 600
 			radish_animations.z_index = 1
 			radish_animations.z_as_relative = true
 			radish_animations.play("sprout")
 			event_bus.radish_sprouted.emit(self, global_position, _grid_coords)
+
 		RadishState.ADULT:
 			radish_animations.play("adult")
 			growing = false
 			event_bus.radish_matured.emit(self, global_position, _grid_coords)
+
 		RadishState.AIRBORNE:
 			radish_animations.play("airborne")
+
 		RadishState.LANDED:
 			radish_animations.play("landed")
 
-## pauses growth while preserving radish_growth_timer (e.g. while being chewed)
 func pause_growth() -> void:
 	growing = false
-	
-## resumes growth from preserved progress, unless already fully grown
+
 func resume_growth() -> void:
 	if current_state < RadishState.ADULT:
 		growing = true
-		
+
 func _physics_process(delta: float) -> void:
 	if holder and is_instance_valid(holder):
 		global_position = holder.global_position + _follow_offset
 
 	if growing:
-		radish_growth_timer += radish_growth_rate * delta
+		var multiplier := 1.0
+
+		if _radish_manager:
+			multiplier = _radish_manager.get_growth_multiplier(current_state)
+
+		radish_growth_timer += radish_growth_rate * multiplier * delta
+
 		if radish_growth_timer >= radish_state_change_timer:
 			var next_state := current_state + 1
+
 			if next_state <= RadishState.ADULT:
 				change_state(next_state as RadishState)
+
 			radish_growth_timer = 0.0
 
 func get_current_state() -> RadishState:

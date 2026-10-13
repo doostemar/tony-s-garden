@@ -39,6 +39,7 @@ animal_manager = NodePath("../animal_manager")
 [node name="debug_manager" parent="." node_paths=PackedStringArray("player_path", "garden_manager_path") instance=ExtResource("5_71j4m")]
 player_path = NodePath("../tony")
 garden_manager_path = NodePath("../garden_manager")
+shop_ui_path = NodePath("../UI/shop_ui")
 
 [node name="radish_manager" parent="." instance=ExtResource("7_i7141")]
 y_sort_enabled = true

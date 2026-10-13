@@ -1,3 +1,4 @@
+# debug_manager.gd
 class_name DebugManager
 extends CanvasLayer
 
@@ -5,6 +6,7 @@ signal debug_menu_toggled(is_open: bool)
 
 @export var player_path: Node
 @export var garden_manager_path: Node
+@export var shop_ui_path: NodePath
 
 @export var ui_offset: Vector2 = Vector2(400, 50)
 @export var ui_scale: Vector2 = Vector2(0.5, 0.5)
@@ -13,11 +15,13 @@ signal debug_menu_toggled(is_open: bool)
 
 var player: CharacterBody2D
 var garden_manager: Garden_Manager
+var shop_ui: CanvasLayer
 
 var modules: Array[DebugModule] = []
 var _debug_menu_open: bool = false
 
 var _toggle_button: Button
+var _toggle_button_container: Control
 var _menu_panel: Panel
 var _menu_container: VBoxContainer
 var _module_buttons: Dictionary = {}
@@ -28,41 +32,107 @@ var _is_dragging: bool = false
 var _drag_start_mouse_pos: Vector2
 var _panel_start_pos: Vector2
 
+# shop input blocking
+var _shop_was_active: bool = false
+var _saved_mouse_filters: Dictionary = {}
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	player = player_path
 	garden_manager = garden_manager_path
-	
+
 	if player == null:
 		push_warning("DebugManager: Player not found at path: %s" % player_path)
+
 	if garden_manager == null:
 		push_warning("DebugManager: Garden_Manager not found at path: %s" % garden_manager_path)
-	
+
+	if not shop_ui_path.is_empty():
+		shop_ui = get_node_or_null(shop_ui_path)
+
+	if shop_ui == null:
+		push_warning("DebugManager: Shop UI not found. Debug mouse blocking will be disabled.")
+
 	offset = ui_offset
 	scale = ui_scale
-	
+
 	_create_toggle_button()
 	_create_debug_menu()
 	_initialize_modules()
-	
+
 	for module in modules:
 		module.post_setup()
-	
+
 	_set_debug_menu_open(false)
+
+func _process(_delta: float) -> void:
+	if shop_ui == null:
+		return
+
+	var shop_active := shop_ui.visible
+
+	if shop_active == _shop_was_active:
+		return
+
+	_shop_was_active = shop_active
+
+	if shop_active:
+		_block_debug_mouse_input()
+	else:
+		_restore_debug_mouse_input()
 
 # --- Focus clearing --- #
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and not event.pressed:
 		var focused := get_viewport().gui_get_focus_owner()
-		if focused and not (focused is BaseButton):
+
+		if focused and not _is_text_entry_control(focused):
 			focused.release_focus()
+
+func _is_text_entry_control(control: Control) -> bool:
+	if control is LineEdit or control is TextEdit:
+		return true
+
+	return false
 
 func _clear_ui_focus() -> void:
 	var focused := get_viewport().gui_get_focus_owner()
+
 	if focused:
 		focused.release_focus()
+
+# --- Shop mouse blocking --- #
+
+func _block_debug_mouse_input() -> void:
+	_saved_mouse_filters.clear()
+
+	if _toggle_button_container:
+		_block_control_tree(_toggle_button_container)
+
+	if _menu_panel:
+		_block_control_tree(_menu_panel)
+
+	for module in modules:
+		if module.main_panel:
+			_block_control_tree(module.main_panel)
+
+func _block_control_tree(node: Node) -> void:
+	if node is Control:
+		var control := node as Control
+		_saved_mouse_filters[control] = control.mouse_filter
+		control.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	for child in node.get_children():
+		_block_control_tree(child)
+
+func _restore_debug_mouse_input() -> void:
+	for control in _saved_mouse_filters:
+		if is_instance_valid(control):
+			control.mouse_filter = _saved_mouse_filters[control]
+
+	_saved_mouse_filters.clear()
 
 # --- ui --- #
 
@@ -73,7 +143,9 @@ func _create_toggle_button() -> void:
 	button_container.position = (toggle_button_position - offset) / ui_scale
 	button_container.scale = Vector2.ONE / ui_scale
 	add_child(button_container)
-	
+
+	_toggle_button_container = button_container
+
 	_toggle_button = Button.new()
 	_toggle_button.name = "DebugToggleButton"
 	_toggle_button.text = "Debug"
@@ -89,39 +161,39 @@ func _create_debug_menu() -> void:
 	_menu_panel.position = Vector2(10, 50)
 	_menu_panel.gui_input.connect(_on_menu_gui_input)
 	add_child(_menu_panel)
-	
+
 	var vbox := VBoxContainer.new()
 	vbox.name = "MenuVBox"
 	vbox.position = Vector2(10, 10)
 	_menu_panel.add_child(vbox)
-	
+
 	var title := Label.new()
 	title.text = "Debug Menu"
 	title.add_theme_font_size_override("font_size", 16)
 	vbox.add_child(title)
-	
+
 	var sep := HSeparator.new()
 	vbox.add_child(sep)
-	
+
 	_menu_container = VBoxContainer.new()
 	_menu_container.name = "ModuleToggles"
 	vbox.add_child(_menu_container)
-	
+
 	_add_collision_toggle(vbox)
-	
+
 	_regenerate_button = Button.new()
 	_regenerate_button.name = "RegenerateGardenButton"
 	_regenerate_button.text = "Regenerate Garden"
 	_regenerate_button.focus_mode = Control.FOCUS_NONE
 	_regenerate_button.pressed.connect(_on_regenerate_button_pressed)
 	vbox.add_child(_regenerate_button)
-	
+
 	_update_menu_size()
 
 func _add_collision_toggle(parent: VBoxContainer) -> void:
 	var sep := HSeparator.new()
 	parent.add_child(sep)
-	
+
 	var collision_btn := CheckButton.new()
 	collision_btn.text = "Show Collisions"
 	collision_btn.button_pressed = get_tree().debug_collisions_hint
@@ -131,7 +203,9 @@ func _add_collision_toggle(parent: VBoxContainer) -> void:
 
 func _on_collision_toggle(enabled: bool) -> void:
 	get_tree().debug_collisions_hint = enabled
+
 	var console := get_console()
+
 	if console:
 		console.log_message("Collision shapes: %s" % ("ON" if enabled else "OFF"))
 
@@ -144,14 +218,15 @@ func _register_module(module: DebugModule) -> void:
 	module._init_module(self)
 	module.setup()
 	modules.append(module)
-	
+
 	var console := get_console()
+
 	if console and module != console:
 		module.log_requested.connect(console.log_message)
-	
+
 	if not module.hide_from_menu:
 		_add_module_to_menu(module)
-	
+
 	module.set_module_visible(module.start_visible)
 
 func _add_module_to_menu(module: DebugModule) -> void:
@@ -161,6 +236,7 @@ func _add_module_to_menu(module: DebugModule) -> void:
 	check_btn.focus_mode = Control.FOCUS_NONE
 	check_btn.toggled.connect(func(pressed): _on_module_toggled(module, pressed))
 	_menu_container.add_child(check_btn)
+
 	_module_buttons[module] = check_btn
 	_update_menu_size()
 
@@ -171,7 +247,9 @@ func _update_menu_size() -> void:
 
 func _on_module_toggled(module: DebugModule, visible: bool) -> void:
 	module.set_module_visible(visible)
+
 	var console := get_console()
+
 	if console:
 		console.log_message("%s: %s" % [module.module_name, "ON" if visible else "OFF"])
 
@@ -182,22 +260,24 @@ func _set_debug_menu_open(is_open: bool) -> void:
 	_debug_menu_open = is_open
 	_menu_panel.visible = is_open
 	_toggle_button.text = "Debug ▼" if is_open else "Debug ►"
-	
+
 	for module in modules:
 		if not module.hide_from_menu:
 			if is_open:
 				var btn = _module_buttons.get(module)
+
 				if btn:
 					module.set_module_visible(btn.button_pressed)
 			else:
 				module.set_module_visible(false)
-	
+
 	debug_menu_toggled.emit(is_open)
 
 func get_console() -> DebugConsole:
 	for module in modules:
 		if module is DebugConsole:
 			return module
+
 	return null
 
 func get_player() -> CharacterBody2D:
@@ -214,12 +294,12 @@ func add_module(module: DebugModule) -> void:
 func remove_module(module: DebugModule) -> void:
 	module.cleanup()
 	modules.erase(module)
-	
+
 	if module in _module_buttons:
 		_module_buttons[module].queue_free()
 		_module_buttons.erase(module)
 		_update_menu_size()
-	
+
 	module.queue_free()
 
 func is_debug_menu_open() -> bool:
@@ -231,7 +311,9 @@ func set_debug_menu_open(is_open: bool) -> void:
 func _on_regenerate_button_pressed() -> void:
 	if garden_manager:
 		garden_manager.regenerate_garden()
+
 		var console := get_console()
+
 		if console:
 			console.log_message("Garden regeneration triggered.")
 
@@ -241,14 +323,20 @@ func _on_menu_gui_input(event: InputEvent) -> void:
 			_is_dragging = true
 			_drag_start_mouse_pos = get_viewport().get_mouse_position()
 			_panel_start_pos = _menu_panel.position
+
 			var console := get_console()
+
 			if console:
 				console.log_message("Debug menu clicked. Start position: %s" % _panel_start_pos)
+
 		elif _is_dragging:
 			_is_dragging = false
+
 			var console := get_console()
+
 			if console:
 				console.log_message("Debug menu released. Start position: %s, End position: %s" % [_panel_start_pos, _menu_panel.position])
+
 	elif event is InputEventMouseMotion and _is_dragging:
 		var mouse_global = get_viewport().get_mouse_position()
 		var delta = mouse_global - _drag_start_mouse_pos
