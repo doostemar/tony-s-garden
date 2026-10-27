@@ -3,19 +3,20 @@ class_name DebugRadishGrowth
 extends DebugModule
 
 @export var radish_manager_path: NodePath
-@export var panel_size: Vector2 = Vector2(360, 190)
+@export var panel_size: Vector2 = Vector2(400, 150)
 @export var panel_position: Vector2 = Vector2(440, 330)
-@export var multiplier_step: float = 0.25
-@export var max_multiplier: float = 20.0
+@export var time_step: float = 1
 
 var radish_manager: Radish_Manager
 
 var panel: Panel
-var _inputs: Dictionary = {}
+var _inputs: Dictionary = {}  # state -> LineEdit
+
 
 func _init() -> void:
 	module_name = "Radish Growth"
 	start_visible = false
+
 
 func setup() -> void:
 	if not radish_manager_path.is_empty():
@@ -31,9 +32,11 @@ func setup() -> void:
 	_create_panel()
 	_setup_drag(panel)
 
+
 func post_setup() -> void:
 	_refresh_all()
 	log_message("Radish Growth panel initialized")
+
 
 func _create_panel() -> void:
 	panel = Panel.new()
@@ -49,17 +52,14 @@ func _create_panel() -> void:
 	panel.add_child(root)
 
 	var title := Label.new()
-	title.text = "Radish Growth"
+	title.text = "Radish Growth (seconds, 0 = instant)"
 	title.add_theme_font_size_override("font_size", 16)
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(title)
-
-	var description := Label.new()
-	description.text = "1.0 = normal speed"
-	description.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(description)
 
 	_create_state_row(root, "Seed", Radish.RadishState.SEED)
 	_create_state_row(root, "Sprout", Radish.RadishState.SPROUT)
+
 
 func _create_state_row(parent: VBoxContainer, label_text: String, state: int) -> void:
 	var row := HBoxContainer.new()
@@ -78,14 +78,10 @@ func _create_state_row(parent: VBoxContainer, label_text: String, state: int) ->
 	minus_button.pressed.connect(_on_step_pressed.bind(state, -1.0))
 	row.add_child(minus_button)
 
-	var input := SpinBox.new()
-	input.min_value = 0.0
-	input.max_value = max_multiplier
-	input.step = multiplier_step
-	input.allow_greater = true
-	input.allow_lesser = false
+	var input := LineEdit.new()
 	input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	input.value_changed.connect(_on_value_changed.bind(state))
+	input.text_submitted.connect(_on_text_submitted.bind(state))
+	input.focus_exited.connect(_on_focus_exited.bind(state))
 	row.add_child(input)
 
 	var plus_button := Button.new()
@@ -95,23 +91,75 @@ func _create_state_row(parent: VBoxContainer, label_text: String, state: int) ->
 	plus_button.pressed.connect(_on_step_pressed.bind(state, 1.0))
 	row.add_child(plus_button)
 
+	var default_button := Button.new()
+	default_button.text = "Default"
+	default_button.focus_mode = Control.FOCUS_NONE
+	default_button.pressed.connect(_on_default_pressed.bind(state))
+	row.add_child(default_button)
+
 	_inputs[state] = input
 
+
+# --- input handlers --- #
+
 func _on_step_pressed(state: int, direction: float) -> void:
-	var input: SpinBox = _inputs[state]
-	input.value = maxf(0.0, input.value + multiplier_step * direction)
+	_apply_value(state, radish_manager.get_growth_time(state) + time_step * direction)
 
-func _on_value_changed(value: float, state: int) -> void:
-	radish_manager.set_growth_multiplier(state, value)
-	log_message("%s growth multiplier -> %.2f" % [_get_state_name(state), value])
 
-func _refresh_all() -> void:
-	if radish_manager == null:
+func _on_text_submitted(text: String, state: int) -> void:
+	_apply_text(state, text)
+
+
+func _on_focus_exited(state: int) -> void:
+	var input: LineEdit = _inputs[state]
+	_apply_text(state, input.text)
+
+
+func _on_default_pressed(state: int) -> void:
+	radish_manager.reset_growth_time(state)
+	_refresh(state)
+	log_message("%s growth time -> default (%s s)" % [_get_state_name(state), _format(radish_manager.get_growth_time(state))])
+
+
+func _apply_text(state: int, text: String) -> void:
+	var trimmed := text.strip_edges()
+
+	if trimmed.is_valid_float():
+		_apply_value(state, trimmed.to_float())
+	else:
+		# invalid / unchanged entry: just put the current value back
+		_refresh(state)
+
+
+func _apply_value(state: int, value: float) -> void:
+	value = maxf(value, 0.0)
+
+	if not is_equal_approx(value, radish_manager.get_growth_time(state)):
+		radish_manager.set_growth_time(state, value)
+		log_message("%s growth time -> %s s" % [_get_state_name(state), _format(value)])
+
+	_refresh(state)
+
+
+# --- display --- #
+
+
+func _refresh(state: int) -> void:
+	if radish_manager == null or not _inputs.has(state):
 		return
 
+	var input: LineEdit = _inputs[state]
+	input.text = _format(radish_manager.get_growth_time(state))
+
+
+func _refresh_all() -> void:
 	for state in _inputs:
-		var input: SpinBox = _inputs[state]
-		input.set_value_no_signal(radish_manager.get_growth_multiplier(state))
+		_refresh(state)
+
+
+func _format(value: float) -> String:
+	return String.num(value, 3)
+
 
 func _get_state_name(state: int) -> String:
 	match state:
@@ -121,6 +169,7 @@ func _get_state_name(state: int) -> String:
 			return "Sprout"
 		_:
 			return "State %d" % state
+
 
 func _find_radish_manager(node: Node) -> Radish_Manager:
 	if node is Radish_Manager:

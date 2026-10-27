@@ -36,6 +36,7 @@ var _panel_start_pos: Vector2
 var _shop_was_active: bool = false
 var _saved_mouse_filters: Dictionary = {}
 
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
@@ -66,6 +67,7 @@ func _ready() -> void:
 
 	_set_debug_menu_open(false)
 
+
 func _process(_delta: float) -> void:
 	if shop_ui == null:
 		return
@@ -82,6 +84,7 @@ func _process(_delta: float) -> void:
 	else:
 		_restore_debug_mouse_input()
 
+
 # --- Focus clearing --- #
 
 func _input(event: InputEvent) -> void:
@@ -91,17 +94,20 @@ func _input(event: InputEvent) -> void:
 		if focused and not _is_text_entry_control(focused):
 			focused.release_focus()
 
+
 func _is_text_entry_control(control: Control) -> bool:
 	if control is LineEdit or control is TextEdit:
 		return true
 
 	return false
 
+
 func _clear_ui_focus() -> void:
 	var focused := get_viewport().gui_get_focus_owner()
 
 	if focused:
 		focused.release_focus()
+
 
 # --- Shop mouse blocking --- #
 
@@ -118,6 +124,7 @@ func _block_debug_mouse_input() -> void:
 		if module.main_panel:
 			_block_control_tree(module.main_panel)
 
+
 func _block_control_tree(node: Node) -> void:
 	if node is Control:
 		var control := node as Control
@@ -127,12 +134,14 @@ func _block_control_tree(node: Node) -> void:
 	for child in node.get_children():
 		_block_control_tree(child)
 
+
 func _restore_debug_mouse_input() -> void:
 	for control in _saved_mouse_filters:
 		if is_instance_valid(control):
 			control.mouse_filter = _saved_mouse_filters[control]
 
 	_saved_mouse_filters.clear()
+
 
 # --- ui --- #
 
@@ -153,6 +162,7 @@ func _create_toggle_button() -> void:
 	_toggle_button.pressed.connect(_on_toggle_button_pressed)
 	_toggle_button.focus_mode = Control.FOCUS_NONE
 	button_container.add_child(_toggle_button)
+
 
 func _create_debug_menu() -> void:
 	_menu_panel = Panel.new()
@@ -190,6 +200,7 @@ func _create_debug_menu() -> void:
 
 	_update_menu_size()
 
+
 func _add_collision_toggle(parent: VBoxContainer) -> void:
 	var sep := HSeparator.new()
 	parent.add_child(sep)
@@ -201,6 +212,7 @@ func _add_collision_toggle(parent: VBoxContainer) -> void:
 	collision_btn.toggled.connect(_on_collision_toggle)
 	parent.add_child(collision_btn)
 
+
 func _on_collision_toggle(enabled: bool) -> void:
 	get_tree().debug_collisions_hint = enabled
 
@@ -209,10 +221,12 @@ func _on_collision_toggle(enabled: bool) -> void:
 	if console:
 		console.log_message("Collision shapes: %s" % ("ON" if enabled else "OFF"))
 
+
 func _initialize_modules() -> void:
 	for child in get_children():
 		if child is DebugModule:
 			_register_module(child)
+
 
 func _register_module(module: DebugModule) -> void:
 	module._init_module(self)
@@ -229,6 +243,7 @@ func _register_module(module: DebugModule) -> void:
 
 	module.set_module_visible(module.start_visible)
 
+
 func _add_module_to_menu(module: DebugModule) -> void:
 	var check_btn := CheckButton.new()
 	check_btn.text = module.module_name
@@ -240,10 +255,12 @@ func _add_module_to_menu(module: DebugModule) -> void:
 	_module_buttons[module] = check_btn
 	_update_menu_size()
 
+
 func _update_menu_size() -> void:
 	await get_tree().process_frame
 	var content_size = _menu_panel.get_child(0).get_combined_minimum_size()
 	_menu_panel.size = content_size + Vector2(20, 20)
+
 
 func _on_module_toggled(module: DebugModule, visible: bool) -> void:
 	module.set_module_visible(visible)
@@ -253,8 +270,10 @@ func _on_module_toggled(module: DebugModule, visible: bool) -> void:
 	if console:
 		console.log_message("%s: %s" % [module.module_name, "ON" if visible else "OFF"])
 
+
 func _on_toggle_button_pressed() -> void:
 	_set_debug_menu_open(not _debug_menu_open)
+
 
 func _set_debug_menu_open(is_open: bool) -> void:
 	_debug_menu_open = is_open
@@ -273,6 +292,7 @@ func _set_debug_menu_open(is_open: bool) -> void:
 
 	debug_menu_toggled.emit(is_open)
 
+
 func get_console() -> DebugConsole:
 	for module in modules:
 		if module is DebugConsole:
@@ -280,16 +300,20 @@ func get_console() -> DebugConsole:
 
 	return null
 
+
 func get_player() -> CharacterBody2D:
 	return player
 
+
 func get_garden_manager() -> Garden_Manager:
 	return garden_manager
+
 
 func add_module(module: DebugModule) -> void:
 	add_child(module)
 	_register_module(module)
 	module.post_setup()
+
 
 func remove_module(module: DebugModule) -> void:
 	module.cleanup()
@@ -302,11 +326,14 @@ func remove_module(module: DebugModule) -> void:
 
 	module.queue_free()
 
+
 func is_debug_menu_open() -> bool:
 	return _debug_menu_open
 
+
 func set_debug_menu_open(is_open: bool) -> void:
 	_set_debug_menu_open(is_open)
+
 
 func _on_regenerate_button_pressed() -> void:
 	if garden_manager:
@@ -316,6 +343,7 @@ func _on_regenerate_button_pressed() -> void:
 
 		if console:
 			console.log_message("Garden regeneration triggered.")
+
 
 func _on_menu_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
