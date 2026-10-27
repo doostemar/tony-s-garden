@@ -1,3 +1,4 @@
+# pickup_component.gd
 extends Node2D
 class_name Pickup_Component
 

@@ -1,3 +1,4 @@
+# throw_component.gd
 class_name Throw_Component
 extends Node2D
 

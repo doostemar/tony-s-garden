@@ -1,3 +1,4 @@
+# shop_ui.gd
 class_name ShopUI
 extends CanvasLayer
 
