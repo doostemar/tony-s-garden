@@ -22,8 +22,10 @@ extends CharacterBody2D
 
 var held_radish: Radish
 
+
 func _ready():
 	held_radish = null
+
 	movement_component.init(movement_speed)
 	animation_component.init()
 	plant_component.init(planting_hitbox_size)
@@ -38,31 +40,47 @@ func _ready():
 	if buff_manager:
 		buff_manager.radish_buff_rolled.connect(_on_radish_buff_rolled)
 
+
 func _physics_process(delta):
 	input_manager.process_input()
 	var movement = movement_component.move()
 	move_and_collide(movement)
-	
+
+
 func get_buff_manager() -> Buff_Manager:
 	if !buff_manager: return null
 	return buff_manager
 
+
 # ---- actions ---- #
 
 func _on_action_plant():
+	# harvest has priority even while holding (radishes stack),
+	# otherwise plant with an empty hand or throw one radish.
+	call_deferred("_try_pickup_plant_or_throw")
+
+
+func _try_pickup_plant_or_throw():
+	if pickup_component.pickup():
+		return
+
 	if carry_manager.is_hand_empty():
-		call_deferred("_try_plant_or_pickup")
+		plant_component.plant()
 	else:
 		_throw()
+
 
 func _try_plant_or_pickup():
 	# harvest has priority: if there's a pickable radish in range, take it.
 	if pickup_component.pickup():
 		return
+
 	plant_component.plant()
+
 
 func _on_action_shout():
 	shout_component.shouting()
+
 
 func _throw() -> void:
 	if throw_component:
@@ -70,15 +88,19 @@ func _throw() -> void:
 	else:
 		print("i can't throw this thing")
 
+
 func _on_action_dance():
 	print("dancing")
+
 
 # helper for future shop integration
 func apply_item_buff(buff: Buff_Definition) -> void:
 	if buff_manager == null:
 		push_warning("Tony.apply_item_buff: buff_manager not assigned")
 		return
+
 	buff_manager.apply_buff(buff, &"shop_item")
+
 
 # helper for radish consumption
 # returns the rolled buff so UI / dialogue systems can display flavor text later
@@ -86,20 +108,26 @@ func eat_radish_for_buff() -> Buff_Definition:
 	if buff_manager == null:
 		push_warning("Tony.eat_radish_for_buff: buff_manager not assigned")
 		return null
+
 	return buff_manager.apply_random_radish_buff()
+
 
 func _on_radish_buff_rolled(buff: Buff_Definition, new_tier: int, flavor_text: String) -> void:
 	print("Radish buff rolled: ", buff.display_name, " tier ", new_tier, " | ", flavor_text)
+
 
 # ---- helpers (deprecated) ---- #
 
 func get_movement_input_stack() -> Array[String]:
 	if input_manager and input_manager.has_method("get_movement_input_stack"):
 		return input_manager.get_movement_input_stack()
+
 	return []
+
 
 func get_last_direction() -> int:
 	return context.get_last_dir()
+
 
 func get_speed() -> float:
 	return movement_speed

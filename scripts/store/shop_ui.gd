@@ -16,18 +16,21 @@ extends CanvasLayer
 @export var throw_speed_row: Control
 @export var plant_radius_row: Control
 @export var shout_radius_row: Control
+@export var pickup_radius_row: Control
 
 @export_group("Item Buttons")
 @export var move_speed_button: Button
 @export var throw_speed_button: Button
 @export var plant_radius_button: Button
 @export var shout_radius_button: Button
+@export var pickup_radius_button: Button
 
 @export_group("Item Icons")
 @export var move_speed_icon: TextureRect
 @export var throw_speed_icon: TextureRect
 @export var plant_radius_icon: TextureRect
 @export var shout_radius_icon: TextureRect
+@export var pickup_radius_icon: TextureRect
 
 @export_group("Action Buttons")
 @export var continue_button: Button
@@ -38,6 +41,7 @@ const ITEM_NAMES := {
 	Buff_Definition.StatType.THROW_SPEED: "Baseball glove",
 	Buff_Definition.StatType.PLANT_RADIUS: "Big seed bag",
 	Buff_Definition.StatType.SHOUT_RADIUS: "Whistle",
+	Buff_Definition.StatType.PICKUP_RADIUS: "Big basket",
 }
 
 const ITEM_ORDER := [
@@ -45,6 +49,7 @@ const ITEM_ORDER := [
 	Buff_Definition.StatType.THROW_SPEED,
 	Buff_Definition.StatType.PLANT_RADIUS,
 	Buff_Definition.StatType.SHOUT_RADIUS,
+	Buff_Definition.StatType.PICKUP_RADIUS,
 ]
 
 const ITEM_COST := 1
@@ -55,11 +60,8 @@ const ITEM_COST := 1
 #     "buff": Buff_Definition
 # }
 var _item_rows: Dictionary = {}
-
 var buff_manager: Buff_Manager
-
 var _opened_with_no_radishes: bool = false
-
 var _focusable_buttons: Array[Button] = []
 var _focus_index: int = 0
 
@@ -69,7 +71,6 @@ func _ready() -> void:
 	_connect_button_signals()
 	_connect_game_signals()
 	_resolve_buff_manager()
-
 	visible = false
 
 
@@ -97,6 +98,12 @@ func _build_item_mapping() -> void:
 			"row": shout_radius_row,
 			"button": shout_radius_button,
 			"icon": shout_radius_icon,
+			"buff": null,
+		},
+		Buff_Definition.StatType.PICKUP_RADIUS: {
+			"row": pickup_radius_row,
+			"button": pickup_radius_button,
+			"icon": pickup_radius_icon,
 			"buff": null,
 		},
 	}
@@ -306,7 +313,6 @@ func _open_shop() -> void:
 		end_game_button.visible = final_day
 
 	_refresh()
-
 	visible = true
 	_focus_index = 0
 	_rebuild_focusable_list()
@@ -359,7 +365,6 @@ func _on_item_pressed(stat_type: int) -> void:
 		return
 
 	buff_manager.apply_buff(buff, &"shop")
-
 	_refresh()
 	_rebuild_focusable_list()
 
@@ -456,7 +461,6 @@ func _resolve_shop_buffs() -> void:
 	for stat_type in ITEM_ORDER:
 		var buff := _find_buff_for_stat(stat_type)
 		var data: Dictionary = _item_rows[stat_type]
-
 		data["buff"] = buff
 
 		var icon_rect: TextureRect = data["icon"]

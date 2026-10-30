@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Buff_Definition" load_steps=3 format=3 uid="uid://fbavbtjxn4tv"]
+
+[ext_resource type="Texture2D" uid="uid://bisybjc1m1cyb" path="res://sprites/items/Screenshot 2026-04-01 141618.png" id="1_2erkw"]
+[ext_resource type="Script" uid="uid://56mcrlwv6exc" path="res://scripts/tony/buff_definition.gd" id="1_332bw"]
+
+[resource]
+script = ExtResource("1_332bw")
+buff_id = &"pickup_radius"
+display_name = "Big glove"
+flavor_text = "hmmmmmmmmmm................."
+icon = ExtResource("1_2erkw")
+stat_type = 4
+modifier_per_tier = 2.01
+max_tier = 3
+duplicates_upgrade = true
+metadata/_custom_type_script = "uid://56mcrlwv6exc"

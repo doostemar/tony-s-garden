@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://bc815ejajxw2d"]
+[gd_scene load_steps=72 format=3 uid="uid://bc815ejajxw2d"]
 
 [ext_resource type="Texture2D" uid="uid://bltc0qluloure" path="res://sprites/tony/tony-spritesheet-full-1.png" id="1_adt52"]
 [ext_resource type="Script" uid="uid://doqw8r20d25v2" path="res://scripts/tony/tony.gd" id="1_n2y5k"]
@@ -15,6 +15,7 @@
 [ext_resource type="Resource" uid="uid://frff0qeyr5t1" path="res://resources/shout_buff.tres" id="8_vdebt"]
 [ext_resource type="Resource" uid="uid://cixey7ajupjww" path="res://resources/throw_buff.tres" id="9_2fqtj"]
 [ext_resource type="Script" uid="uid://ds1yrbusraqjm" path="res://scripts/tony/carry_visual.gd" id="9_frrmu"]
+[ext_resource type="Resource" uid="uid://fbavbtjxn4tv" path="res://resources/pickup_radius_buff.tres" id="10_mn251"]
 [ext_resource type="Script" uid="uid://q4c4atu8e0pg" path="res://scripts/tony/throw_component.gd" id="12_l7wjg"]
 [ext_resource type="Script" uid="uid://u0iqe0a0pwlk" path="res://scripts/tony/plant_component.gd" id="13_ecxxv"]
 [ext_resource type="Script" uid="uid://crtqv7vygo8kf" path="res://scripts/tony/pickup_component.gd" id="14_dsoo0"]
@@ -528,11 +529,6 @@ context = NodePath("tony_context")
 shout_component = NodePath("shout_component")
 throw_component = NodePath("throw_component")
 buff_manager = NodePath("buff_manager")
-movement_speed = null
-planting_hitbox_size = null
-pickup_hitbox_size = null
-shout_hitbox_size = null
-shout_duration = null
 
 [node name="tony_context" type="Node" parent="."]
 script = ExtResource("2_361jj")
@@ -544,7 +540,7 @@ context = NodePath("../tony_context")
 [node name="buff_manager" type="Node" parent="." node_paths=PackedStringArray("context")]
 script = ExtResource("4_dsoo0")
 context = NodePath("../tony_context")
-radish_buff_pool = Array[ExtResource("5_jyouf")]([ExtResource("6_gpb4h"), ExtResource("7_mn251"), ExtResource("8_vdebt"), ExtResource("9_2fqtj")])
+radish_buff_pool = Array[ExtResource("5_jyouf")]([ExtResource("6_gpb4h"), ExtResource("7_mn251"), ExtResource("8_vdebt"), ExtResource("9_2fqtj"), ExtResource("10_mn251")])
 
 [node name="tony_animations" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("context")]
 texture_filter = 1
@@ -592,6 +588,7 @@ context = NodePath("../tony_context")
 script = ExtResource("13_ecxxv")
 context = NodePath("../tony_context")
 
-[node name="pickup_component" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager")]
+[node name="pickup_component" type="Node2D" parent="." node_paths=PackedStringArray("carry_manager", "context")]
 script = ExtResource("14_dsoo0")
 carry_manager = NodePath("../carry_manager")
+context = NodePath("../tony_context")

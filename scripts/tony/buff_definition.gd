@@ -5,7 +5,8 @@ enum StatType {
 	MOVE_SPEED,
 	SHOUT_RADIUS,
 	THROW_SPEED,
-	PLANT_RADIUS
+	PLANT_RADIUS,
+	PICKUP_RADIUS
 }
 
 @export var buff_id: StringName = &""

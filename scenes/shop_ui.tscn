@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dnwrx1ycfmuuy" path="res://scripts/store/shop_ui.gd" id="1_fs6yy"]
 
-[node name="shop_ui" type="CanvasLayer" node_paths=PackedStringArray("title_label", "radish_label", "no_radish_label", "move_speed_row", "throw_speed_row", "plant_radius_row", "shout_radius_row", "move_speed_button", "throw_speed_button", "plant_radius_button", "shout_radius_button", "move_speed_icon", "throw_speed_icon", "plant_radius_icon", "shout_radius_icon", "continue_button", "end_game_button")]
+[node name="shop_ui" type="CanvasLayer" node_paths=PackedStringArray("title_label", "radish_label", "no_radish_label", "move_speed_row", "throw_speed_row", "plant_radius_row", "shout_radius_row", "pickup_radius_row", "move_speed_button", "throw_speed_button", "plant_radius_button", "shout_radius_button", "pickup_radius_button", "move_speed_icon", "throw_speed_icon", "plant_radius_icon", "shout_radius_icon", "pickup_radius_icon", "continue_button", "end_game_button")]
 process_mode = 3
 layer = 10
 script = ExtResource("1_fs6yy")
@@ -13,21 +13,24 @@ move_speed_row = NodePath("shop_panel/move_speed_row")
 throw_speed_row = NodePath("shop_panel/throw_speed_row")
 plant_radius_row = NodePath("shop_panel/plant_radius_row")
 shout_radius_row = NodePath("shop_panel/shout_radius_row")
+pickup_radius_row = NodePath("shop_panel/pickup_radius_row")
 move_speed_button = NodePath("shop_panel/move_speed_row/ms_button")
 throw_speed_button = NodePath("shop_panel/throw_speed_row/ts_button")
 plant_radius_button = NodePath("shop_panel/plant_radius_row/pr_button")
 shout_radius_button = NodePath("shop_panel/shout_radius_row/sr_button")
+pickup_radius_button = NodePath("shop_panel/pickup_radius_row/pi_button")
 move_speed_icon = NodePath("shop_panel/move_speed_row/ms_icon")
 throw_speed_icon = NodePath("shop_panel/throw_speed_row/ts_icon")
 plant_radius_icon = NodePath("shop_panel/plant_radius_row/pr_icon")
 shout_radius_icon = NodePath("shop_panel/shout_radius_row/sr_icon")
+pickup_radius_icon = NodePath("shop_panel/pickup_radius_row/pi_icon")
 continue_button = NodePath("shop_panel/continue_button")
 end_game_button = NodePath("shop_panel/end_button")
 
 [node name="shop_panel" type="Panel" parent="."]
 anchors_preset = -1
 anchor_left = -0.0746528
-anchor_right = -0.0746528
+anchor_right = -0.0477431
 anchor_bottom = 0.109568
 offset_left = 74.0
 offset_top = 25.0
@@ -164,19 +167,38 @@ offset_right = 279.0
 offset_bottom = 48.0
 text = "whistle"
 
-[node name="HSeparator" type="HSeparator" parent="shop_panel"]
+[node name="pickup_radius_row" type="Control" parent="shop_panel"]
+anchors_preset = 0
+offset_left = 8.00002
+offset_top = 246.0
+offset_right = 317.0
+offset_bottom = 310.0
+mouse_filter = 2
+
+[node name="pi_icon" type="TextureRect" parent="shop_panel/pickup_radius_row"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 242.0
-offset_right = 292.0
-offset_bottom = 265.0
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 45.0
+offset_bottom = 44.0
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="pi_button" type="Button" parent="shop_panel/pickup_radius_row"]
+layout_mode = 2
+offset_left = 52.0
+offset_top = 2.0
+offset_right = 279.0
+offset_bottom = 48.0
+text = "whistle"
 
 [node name="continue_button" type="Button" parent="shop_panel"]
 layout_mode = 0
-offset_left = 6.0
-offset_top = 261.0
-offset_right = 119.0
-offset_bottom = 292.0
+offset_left = 301.0
+offset_top = 81.0
+offset_right = 378.0
+offset_bottom = 187.0
 focus_neighbor_top = NodePath("../shout_radius_row/sr_button")
 focus_neighbor_right = NodePath("../end_button")
 text = "continue"

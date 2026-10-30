@@ -4,3 +4,5 @@
 
 [node name="radish_manager" type="Node2D"]
 script = ExtResource("1_4c88a")
+seed_growth_time = 0.0
+sprout_growth_time = 0.0
