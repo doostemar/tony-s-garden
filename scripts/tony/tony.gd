@@ -1,4 +1,4 @@
-#tony.gd
+# tony.gd
 extends CharacterBody2D
 
 # components and references
@@ -21,6 +21,9 @@ extends CharacterBody2D
 @export var shout_duration: float = 1
 
 var held_radish: Radish
+
+# incremented on every reset to invalidate deferred actions.
+var _action_generation: int = 0
 
 
 func _ready():
@@ -48,19 +51,53 @@ func _physics_process(delta):
 
 
 func get_buff_manager() -> Buff_Manager:
-	if !buff_manager: return null
+	if !buff_manager:
+		return null
 	return buff_manager
+
+
+# ---- day reset ---- #
+
+func reset_for_new_day() -> void:
+	# invalidate any gameplay action deferred before this reset
+	_action_generation += 1
+
+	held_radish = null
+	velocity = Vector2.ZERO
+
+	# the shop's confirm press must not become a gameplay action
+	if input_manager:
+		input_manager.lock_actions_until_released()
+		input_manager.movement_input_stack.clear()
+
+	# the radish manager will remove the actual radishes.
+	# tony only needs to forget what he is carrying/throwing.
+	if throw_component:
+		throw_component.cancel_all_throws()
+
+	if carry_manager:
+		carry_manager.clear_hand()
 
 
 # ---- actions ---- #
 
 func _on_action_plant():
 	# harvest has priority even while holding (radishes stack),
-	# otherwise plant with an empty hand or throw one radish.
-	call_deferred("_try_pickup_plant_or_throw")
+	# otherwise plant with an empty hand or throw one radish
+	call_deferred(
+		"_try_pickup_plant_or_throw",
+		_action_generation
+	)
 
 
-func _try_pickup_plant_or_throw():
+func _try_pickup_plant_or_throw(generation: int = -1):
+	# discard an action scheduled before the world reset
+	if generation != -1 and generation != _action_generation:
+		return
+
+	if get_tree().paused:
+		return
+
 	if pickup_component.pickup():
 		return
 
@@ -71,7 +108,7 @@ func _try_pickup_plant_or_throw():
 
 
 func _try_plant_or_pickup():
-	# harvest has priority: if there's a pickable radish in range, take it.
+	# harvest has priority: if there's a pickable radish in range, take it
 	if pickup_component.pickup():
 		return
 
@@ -103,7 +140,8 @@ func apply_item_buff(buff: Buff_Definition) -> void:
 
 
 # helper for radish consumption
-# returns the rolled buff so UI / dialogue systems can display flavor text later
+# returns the rolled buff so UI / dialogue systems can display
+# flavor text later
 func eat_radish_for_buff() -> Buff_Definition:
 	if buff_manager == null:
 		push_warning("Tony.eat_radish_for_buff: buff_manager not assigned")
@@ -112,14 +150,27 @@ func eat_radish_for_buff() -> Buff_Definition:
 	return buff_manager.apply_random_radish_buff()
 
 
-func _on_radish_buff_rolled(buff: Buff_Definition, new_tier: int, flavor_text: String) -> void:
-	print("Radish buff rolled: ", buff.display_name, " tier ", new_tier, " | ", flavor_text)
+func _on_radish_buff_rolled(
+	buff: Buff_Definition,
+	new_tier: int,
+	flavor_text: String
+) -> void:
+	print(
+		"Radish buff rolled: ",
+		buff.display_name,
+		" tier ",
+		new_tier,
+		" | ",
+		flavor_text
+	)
 
 
 # ---- helpers (deprecated) ---- #
 
 func get_movement_input_stack() -> Array[String]:
-	if input_manager and input_manager.has_method("get_movement_input_stack"):
+	if input_manager and input_manager.has_method(
+		"get_movement_input_stack"
+	):
 		return input_manager.get_movement_input_stack()
 
 	return []

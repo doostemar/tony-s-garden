@@ -26,11 +26,10 @@ func configure(
 
 
 func reset_for_day(config: DayConfig) -> void:
-	# Order is intentional:
-	# 1. Tony releases anything he is carrying.
-	# 2. Animals release/reset their gameplay state.
-	# 3. Radishes are detached from the world.
-	# 4. Garden is rebuilt.
+	# 1 tony clears his gameplay state
+	# 2 animals release/reset their gameplay state
+	# 3 radishes are removed
+	# 4 garden is rebuilt
 
 	_reset_tony()
 	_reset_animals()
@@ -42,13 +41,21 @@ func _reset_tony() -> void:
 	if _tony == null:
 		return
 
-	var carry_manager = _tony.get("carry_manager")
+	if _tony.has_method("reset_for_new_day"):
+		_tony.reset_for_new_day()
+	else:
+		push_warning(
+			"DayWorldResetter: Tony missing reset_for_new_day()."
+		)
 
-	if (
-		carry_manager
-		and carry_manager.has_method("clear_hand")
-	):
-		carry_manager.clear_hand()
+		# compatibility fallback
+		var carry_manager = _tony.get("carry_manager")
+
+		if (
+			carry_manager
+			and carry_manager.has_method("clear_hand")
+		):
+			carry_manager.clear_hand()
 
 	_tony.global_position = _tony_spawn_position
 
